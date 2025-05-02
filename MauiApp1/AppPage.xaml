@@ -1,0 +1,68 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<ContentPage xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+             x:Class="MauiApp1.AppPage">
+
+    <ContentPage.ToolbarItems>
+        <ToolbarItem IconImageSource="help_icon.png"
+                     Text="Aide"
+                     Order="Primary"
+                     Priority="0"
+                     Clicked="OnHelpClicked" />
+    </ContentPage.ToolbarItems>
+    
+    <ScrollView>
+        <VerticalStackLayout Padding="20" Spacing="15">
+
+        <!-- Texte à saisir -->
+        <Label Text="Texte à encoder :" />
+        <Entry x:Name="txtInput" Placeholder="Entrez votre texte" />
+
+        <!-- Niveau de correction -->
+        <Label Text="Niveau de correction :" />
+        <HorizontalStackLayout>
+            <RadioButton x:Name="rbL" Content="L" GroupName="CorrectionLevel" IsChecked="True"/>
+            <RadioButton x:Name="rbM" Content="M" GroupName="CorrectionLevel"/>
+            <RadioButton x:Name="rbQ" Content="Q" GroupName="CorrectionLevel"/>
+            <RadioButton x:Name="rbH" Content="H" GroupName="CorrectionLevel"/>
+        </HorizontalStackLayout>
+
+            <HorizontalStackLayout
+    Spacing="12"
+    HorizontalOptions="Center"
+    VerticalOptions="Center">
+
+                <!-- Bouton de génération -->
+                <Button x:Name="btnGenerate" Text="Générer le QR Code" Clicked="OnGenerateQRCodeClicked" />
+
+                <!-- Bouton Partager avec bordure -->
+                <Border
+        Stroke="Gray"
+        StrokeThickness="1"
+        BackgroundColor="Transparent"
+        StrokeShape="RoundRectangle 8"
+        WidthRequest="48"
+        HeightRequest="48"
+        Padding="6"
+        VerticalOptions="Center">
+
+                    <ImageButton
+            Source="share.png"
+            Clicked="OnShareQrCodeClicked"
+            BackgroundColor="Transparent"
+            WidthRequest="32"
+            HeightRequest="32"
+            HorizontalOptions="Center"
+            VerticalOptions="Center" />
+                </Border>
+            </HorizontalStackLayout>
+
+
+            <!-- Fenêtre d'affichage du QR Code -->
+        <Border x:Name="qrBorder" Stroke="Black" StrokeThickness="1" Padding="0" HorizontalOptions="Center">
+            <GraphicsView x:Name="qrCodeView" WidthRequest="250" HeightRequest="250" />
+        </Border>
+
+        </VerticalStackLayout>
+    </ScrollView>
+</ContentPage>

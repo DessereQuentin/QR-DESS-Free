@@ -1,0 +1,57 @@
+﻿<?xml version="1.0" encoding="utf-8" ?>
+
+<ContentPage xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             x:Class="MauiApp1.MainPage">
+
+    <ScrollView>
+        <StackLayout Spacing="30">
+
+            <StackLayout VerticalOptions="Start" HorizontalOptions="CenterAndExpand">
+                <Image
+                   x:Name="Logo"
+                   Source="logo_qrdessfree.bmp"
+                   HeightRequest="128" 
+                   WidthRequest="128" 
+                   Rotation="0"
+                   Aspect="AspectFill" IsVisible="True"/>
+            </StackLayout>
+
+            <StackLayout VerticalOptions="CenterAndExpand" HorizontalOptions="CenterAndExpand">
+                <Image
+                    x:Name="QRCodeDESS"
+                    Source="qrcodedess.bmp"
+                    HeightRequest="239" 
+                    WidthRequest="239" 
+                    Rotation="0"
+                    Aspect="AspectFill" IsVisible="False"/>
+
+                <Label 
+                    x:Name="Label1"
+                    Text="Bienvenue dans votre application" 
+                    FontSize="18" 
+                    HorizontalOptions="Center"
+                    Opacity="0"/>
+                <Label 
+                    x:Name="Label2"
+                    Text="de génération de QR Code" 
+                    FontSize="18" 
+                    HorizontalOptions="Center"
+                    Opacity="0"/>
+                <Label 
+                    x:Name="Label3"
+                    Text="QR Dess Free" 
+                    FontSize="36" 
+                    HorizontalOptions="Center" 
+                    Opacity="0"/>
+                <Button 
+                    x:Name="btnStart"
+                    Text="Ouvrir l'application" 
+                    Clicked="OnOpenAppClicked" 
+                    HorizontalOptions="Center"
+                    Opacity="0"/>
+
+            </StackLayout>
+        </StackLayout>
+    </ScrollView>
+</ContentPage>
