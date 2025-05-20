@@ -1,0 +1,206 @@
+{
+  "format": 1,
+  "restore": {
+    "C:\\Users\\antoi\\source\\repos\\QR-DESS-Free\\MauiApp1.Mac\\QRDessFree.Mac.csproj": {}
+  },
+  "projects": {
+    "C:\\Users\\antoi\\source\\repos\\QR-DESS-Free\\MauiApp1.Mac\\QRDessFree.Mac.csproj": {
+      "version": "1.0.0",
+      "restore": {
+        "projectUniqueName": "C:\\Users\\antoi\\source\\repos\\QR-DESS-Free\\MauiApp1.Mac\\QRDessFree.Mac.csproj",
+        "projectName": "QRDessFree.Mac",
+        "projectPath": "C:\\Users\\antoi\\source\\repos\\QR-DESS-Free\\MauiApp1.Mac\\QRDessFree.Mac.csproj",
+        "packagesPath": "C:\\Users\\antoi\\.nuget\\packages\\",
+        "outputPath": "C:\\Users\\antoi\\source\\repos\\QR-DESS-Free\\MauiApp1.Mac\\obj\\",
+        "projectStyle": "PackageReference",
+        "fallbackFolders": [
+          "C:\\Program Files (x86)\\Microsoft Visual Studio\\Shared\\NuGetPackages"
+        ],
+        "configFilePaths": [
+          "C:\\Users\\antoi\\AppData\\Roaming\\NuGet\\NuGet.Config",
+          "C:\\Program Files (x86)\\NuGet\\Config\\Microsoft.VisualStudio.FallbackLocation.config",
+          "C:\\Program Files (x86)\\NuGet\\Config\\Microsoft.VisualStudio.Offline.config"
+        ],
+        "originalTargetFrameworks": [
+          "net9.0-maccatalyst"
+        ],
+        "sources": {
+          "C:\\Program Files (x86)\\Microsoft SDKs\\NuGetPackages\\": {},
+          "C:\\Program Files\\dotnet\\library-packs": {},
+          "https://api.nuget.org/v3/index.json": {}
+        },
+        "frameworks": {
+          "net9.0-maccatalyst18.2": {
+            "targetAlias": "net9.0-maccatalyst",
+            "projectReferences": {
+              "C:\\Users\\antoi\\source\\repos\\QR-DESS-Free\\MauiApp1\\QRDessFree.csproj": {
+                "projectPath": "C:\\Users\\antoi\\source\\repos\\QR-DESS-Free\\MauiApp1\\QRDessFree.csproj"
+              }
+            }
+          }
+        },
+        "warningProperties": {
+          "warnAsError": [
+            "NU1605"
+          ]
+        },
+        "restoreAuditProperties": {
+          "enableAudit": "true",
+          "auditLevel": "low",
+          "auditMode": "direct"
+        },
+        "SdkAnalysisLevel": "9.0.200"
+      },
+      "frameworks": {
+        "net9.0-maccatalyst18.2": {
+          "targetAlias": "net9.0-maccatalyst",
+          "dependencies": {
+            "Microsoft.Extensions.Logging.Debug": {
+              "target": "Package",
+              "version": "[9.0.0, )"
+            },
+            "Microsoft.Maui.Controls": {
+              "target": "Package",
+              "version": "[9.0.14, )"
+            },
+            "Microsoft.Maui.Graphics.Skia": {
+              "target": "Package",
+              "version": "[9.0.60, )"
+            },
+            "Microsoft.NET.ILLink.Tasks": {
+              "suppressParent": "All",
+              "target": "Package",
+              "version": "[9.0.2, )",
+              "autoReferenced": true
+            },
+            "SkiaSharp": {
+              "target": "Package",
+              "version": "[3.116.1, )"
+            },
+            "SkiaSharp.Views.Maui.Controls": {
+              "target": "Package",
+              "version": "[3.116.1, )"
+            }
+          },
+          "imports": [
+            "xamarinios10",
+            "net461",
+            "net462",
+            "net47",
+            "net471",
+            "net472",
+            "net48",
+            "net481"
+          ],
+          "assetTargetFallback": true,
+          "warn": true,
+          "frameworkReferences": {
+            "Microsoft.MacCatalyst": {
+              "privateAssets": "all"
+            },
+            "Microsoft.NETCore.App": {
+              "privateAssets": "all"
+            }
+          },
+          "runtimeIdentifierGraphPath": "C:\\Program Files\\dotnet\\sdk\\9.0.200/PortableRuntimeIdentifierGraph.json"
+        }
+      },
+      "runtimes": {
+        "maccatalyst-arm64": {
+          "#import": []
+        },
+        "maccatalyst-x64": {
+          "#import": []
+        }
+      }
+    },
+    "C:\\Users\\antoi\\source\\repos\\QR-DESS-Free\\MauiApp1\\QRDessFree.csproj": {
+      "version": "1.0.0",
+      "restore": {
+        "projectUniqueName": "C:\\Users\\antoi\\source\\repos\\QR-DESS-Free\\MauiApp1\\QRDessFree.csproj",
+        "projectName": "QRDessFree",
+        "projectPath": "C:\\Users\\antoi\\source\\repos\\QR-DESS-Free\\MauiApp1\\QRDessFree.csproj",
+        "packagesPath": "C:\\Users\\antoi\\.nuget\\packages\\",
+        "outputPath": "C:\\Users\\antoi\\source\\repos\\QR-DESS-Free\\MauiApp1\\obj\\",
+        "projectStyle": "PackageReference",
+        "fallbackFolders": [
+          "C:\\Program Files (x86)\\Microsoft Visual Studio\\Shared\\NuGetPackages"
+        ],
+        "configFilePaths": [
+          "C:\\Users\\antoi\\AppData\\Roaming\\NuGet\\NuGet.Config",
+          "C:\\Program Files (x86)\\NuGet\\Config\\Microsoft.VisualStudio.FallbackLocation.config",
+          "C:\\Program Files (x86)\\NuGet\\Config\\Microsoft.VisualStudio.Offline.config"
+        ],
+        "originalTargetFrameworks": [
+          "net9.0"
+        ],
+        "sources": {
+          "C:\\Program Files (x86)\\Microsoft SDKs\\NuGetPackages\\": {},
+          "C:\\Program Files\\dotnet\\library-packs": {},
+          "https://api.nuget.org/v3/index.json": {}
+        },
+        "frameworks": {
+          "net9.0": {
+            "targetAlias": "net9.0",
+            "projectReferences": {}
+          }
+        },
+        "warningProperties": {
+          "warnAsError": [
+            "NU1605"
+          ]
+        },
+        "restoreAuditProperties": {
+          "enableAudit": "true",
+          "auditLevel": "low",
+          "auditMode": "direct"
+        },
+        "SdkAnalysisLevel": "9.0.200"
+      },
+      "frameworks": {
+        "net9.0": {
+          "targetAlias": "net9.0",
+          "dependencies": {
+            "Microsoft.Extensions.Logging.Debug": {
+              "target": "Package",
+              "version": "[9.0.0, )"
+            },
+            "Microsoft.Maui.Controls": {
+              "target": "Package",
+              "version": "[9.0.14, )"
+            },
+            "Microsoft.Maui.Graphics.Skia": {
+              "target": "Package",
+              "version": "[9.0.60, )"
+            },
+            "SkiaSharp": {
+              "target": "Package",
+              "version": "[3.116.1, )"
+            },
+            "SkiaSharp.Views.Maui.Controls": {
+              "target": "Package",
+              "version": "[3.116.1, )"
+            }
+          },
+          "imports": [
+            "net461",
+            "net462",
+            "net47",
+            "net471",
+            "net472",
+            "net48",
+            "net481"
+          ],
+          "assetTargetFallback": true,
+          "warn": true,
+          "frameworkReferences": {
+            "Microsoft.NETCore.App": {
+              "privateAssets": "all"
+            }
+          },
+          "runtimeIdentifierGraphPath": "C:\\Program Files\\dotnet\\sdk\\9.0.200/PortableRuntimeIdentifierGraph.json"
+        }
+      }
+    }
+  }
+}

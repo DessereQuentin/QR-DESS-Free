@@ -1,15 +1,15 @@
 <?xml version="1.0" encoding="utf-8"?>
 <!--
     Ce code a été généré par un outil.
-    Il a été généré à partir de C:\Users\quent\Downloads\MauiApp1\MauiApp1.Droid\AndroidManifest.xml
+    Il a été généré à partir de C:\Users\antoi\source\repos\QR-DESS-Free\MauiApp1.Droid\AndroidManifest.xml
     Les changements apportés à ce fichier peuvent provoquer un comportement incorrect et seront perdus si
     le contenu est regénéré.
     -->
 <manifest xmlns:android="http://schemas.android.com/apk/res/android" package="com.companyname.mauiapp1" android:versionCode="1" android:versionName="1.0">
   <uses-sdk android:minSdkVersion="21" android:targetSdkVersion="35" />
   <uses-permission android:name="android.permission.INTERNET" />
-  <application android:allowBackup="true" android:icon="@mipmap/appicon" android:roundIcon="@mipmap/appicon_round" android:label="QR Dess Free" android:supportsRtl="true" android:name="crc6474173a6d71861bcb.MainApplication" android:debuggable="true" android:extractNativeLibs="true">
-    <activity android:configChanges="density|orientation|smallestScreenSize|screenLayout|screenSize|uiMode" android:launchMode="singleTop" android:theme="@style/Maui.SplashTheme" android:name="crc6474173a6d71861bcb.MainActivity" android:exported="true">
+  <application android:allowBackup="true" android:icon="@mipmap/appicon" android:roundIcon="@mipmap/appicon_round" android:label="QR Dess Free" android:supportsRtl="true" android:name="crc645b9367ad2fda6c4c.MainApplication" android:debuggable="true" android:extractNativeLibs="true">
+    <activity android:configChanges="density|orientation|smallestScreenSize|screenLayout|screenSize|uiMode" android:launchMode="singleTop" android:theme="@style/Maui.SplashTheme" android:name="crc645b9367ad2fda6c4c.MainActivity" android:exported="true">
       <intent-filter>
         <action android:name="android.intent.action.MAIN" />
         <category android:name="android.intent.category.LAUNCHER" />

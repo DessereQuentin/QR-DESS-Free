@@ -1,4 +1,4 @@
-﻿namespace MauiApp1.iOS
+﻿namespace QRDessFree.iOS
 {
     public static class MauiProgram
     {

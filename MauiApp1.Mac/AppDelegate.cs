@@ -1,6 +1,6 @@
 using Foundation;
 
-namespace MauiApp1.Mac;
+namespace QRDessFree.Mac;
 
 [Register(nameof(AppDelegate))]
 public class AppDelegate : MauiUIApplicationDelegate

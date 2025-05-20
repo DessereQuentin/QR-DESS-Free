@@ -1,4 +1,4 @@
-﻿namespace MauiApp1
+﻿namespace QRDessFree
 {
     public partial class AppShell : Shell
     {

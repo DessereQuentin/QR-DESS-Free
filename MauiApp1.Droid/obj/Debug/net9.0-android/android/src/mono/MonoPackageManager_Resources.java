@@ -1,8 +1,8 @@
 package mono;
 public class MonoPackageManager_Resources {
 	public static String[] Assemblies = new String[]{
-		/* We need to ensure that "MauiApp1.Droid.dll" comes first in this list. */
-		"MauiApp1.Droid.dll",
+		/* We need to ensure that "QRDessFree.Droid.dll" comes first in this list. */
+		"QRDessFree.Droid.dll",
 		"GoogleGson.dll",
 		"Microsoft.Extensions.Configuration.dll",
 		"Microsoft.Extensions.Configuration.Abstractions.dll",
@@ -106,6 +106,7 @@ public class MonoPackageManager_Resources {
 		"Xamarin.Google.Guava.ListenableFuture.dll",
 		"Xamarin.Jetbrains.Annotations.dll",
 		"Xamarin.Kotlin.StdLib.dll",
+		"Xamarin.Kotlin.StdLib.Common.dll",
 		"Xamarin.KotlinX.AtomicFU.dll",
 		"Xamarin.KotlinX.AtomicFU.Jvm.dll",
 		"Xamarin.KotlinX.Coroutines.Android.dll",
@@ -147,10 +148,10 @@ public class MonoPackageManager_Resources {
 		"Microsoft.Maui.Controls.resources.dll",
 		"Microsoft.Maui.Controls.resources.dll",
 		"Microsoft.Maui.Controls.resources.dll",
-		"MauiApp1.dll",
 		"Microsoft.Maui.Controls.HotReload.Forms.dll",
 		"Microsoft.VisualStudio.DesignTools.MobileTapContracts.dll",
 		"Microsoft.VisualStudio.DesignTools.TapContract.dll",
+		"QRDessFree.dll",
 		"_Microsoft.Android.Resource.Designer.dll",
 	};
 	public static String[] Dependencies = new String[]{

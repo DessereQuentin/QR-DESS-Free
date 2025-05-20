@@ -2,7 +2,7 @@
 using Microsoft.Maui.Platform;
 using System.Text.Json;
 
-namespace MauiApp1
+namespace QRDessFree
 {
     public partial class MainPage : ContentPage
     {

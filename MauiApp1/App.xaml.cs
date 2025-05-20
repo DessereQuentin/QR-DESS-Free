@@ -1,10 +1,10 @@
-﻿using MauiApp1;
+﻿using QRDessFree;
 using Microsoft.Maui.Controls;
 
 
 
 
-namespace MauiApp1
+namespace QRDessFree
 {
     public partial class App : Application
     {

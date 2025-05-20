@@ -3,7 +3,7 @@ using SkiaSharp;
 using System;
 using System.Text;
 
-namespace MauiApp1
+namespace QRDessFree
 {
     /// <summary>Fonctions pour la génération de QRCode</summary>
     public static partial class CLSGenereQRCode

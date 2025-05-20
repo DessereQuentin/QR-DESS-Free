@@ -14,11 +14,11 @@ using System.Reflection;
 [assembly: System.Reflection.AssemblyCompanyAttribute("MauiApp1.Mac")]
 [assembly: System.Reflection.AssemblyConfigurationAttribute("Debug")]
 [assembly: System.Reflection.AssemblyFileVersionAttribute("1.0.0.0")]
-[assembly: System.Reflection.AssemblyInformationalVersionAttribute("1.0.0")]
+[assembly: System.Reflection.AssemblyInformationalVersionAttribute("1.0.0+e76b41a1c53fbdaca3a597d0068bf02ad843dc1f")]
 [assembly: System.Reflection.AssemblyProductAttribute("MauiApp1.Mac")]
 [assembly: System.Reflection.AssemblyTitleAttribute("MauiApp1.Mac")]
 [assembly: System.Reflection.AssemblyVersionAttribute("1.0.0.0")]
-[assembly: System.Runtime.Versioning.TargetPlatformAttribute("MacCatalyst18.4")]
+[assembly: System.Runtime.Versioning.TargetPlatformAttribute("MacCatalyst18.2")]
 [assembly: System.Runtime.Versioning.SupportedOSPlatformAttribute("MacCatalyst15.0")]
 
 // Généré par la classe MSBuild WriteCodeFragment.

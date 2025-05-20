@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <!--
     Ce code a été généré par un outil.
-    Il a été généré à partir de C:\Users\quent\Downloads\MauiApp1\MauiApp1.Droid\AndroidManifest.xml
+    Il a été généré à partir de C:\Users\antoi\source\repos\QR-DESS-Free\MauiApp1.Droid\AndroidManifest.xml
     Les changements apportés à ce fichier peuvent provoquer un comportement incorrect et seront perdus si
     le contenu est regénéré.
 -->
@@ -10,8 +10,8 @@
   <uses-permission android:name="android.permission.INTERNET" />
   <permission android:name="com.companyname.mauiapp1.DYNAMIC_RECEIVER_NOT_EXPORTED_PERMISSION" android:protectionLevel="signature" />
   <uses-permission android:name="com.companyname.mauiapp1.DYNAMIC_RECEIVER_NOT_EXPORTED_PERMISSION" />
-  <application android:name="crc6474173a6d71861bcb.MainApplication" android:allowBackup="true" android:appComponentFactory="androidx.core.app.CoreComponentFactory" android:debuggable="true" android:extractNativeLibs="true" android:icon="@mipmap/appicon" android:label="QR Dess Free" android:roundIcon="@mipmap/appicon_round" android:supportsRtl="true">
-    <activity android:name="crc6474173a6d71861bcb.MainActivity" android:configChanges="density|orientation|smallestScreenSize|screenLayout|screenSize|uiMode" android:exported="true" android:launchMode="singleTop" android:theme="@style/Maui.SplashTheme">
+  <application android:name="crc645b9367ad2fda6c4c.MainApplication" android:allowBackup="true" android:appComponentFactory="androidx.core.app.CoreComponentFactory" android:debuggable="true" android:extractNativeLibs="true" android:icon="@mipmap/appicon" android:label="QR Dess Free" android:roundIcon="@mipmap/appicon_round" android:supportsRtl="true">
+    <activity android:name="crc645b9367ad2fda6c4c.MainActivity" android:configChanges="density|orientation|smallestScreenSize|screenLayout|screenSize|uiMode" android:exported="true" android:launchMode="singleTop" android:theme="@style/Maui.SplashTheme">
       <intent-filter>
         <action android:name="android.intent.action.MAIN" />
         <category android:name="android.intent.category.LAUNCHER" />

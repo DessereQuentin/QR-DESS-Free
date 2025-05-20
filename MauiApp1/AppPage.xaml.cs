@@ -6,14 +6,14 @@ using System.Threading.Tasks;
 using Microsoft.Maui.Controls;
 using SkiaSharp;
 using SkiaSharp.Views.Maui;
-using MauiApp1;
+using QRDessFree;
 using System.IO;
 using Microsoft.Maui.ApplicationModel.DataTransfer;
 using Microsoft.Maui.Graphics;
 using Microsoft.Maui.Graphics.Skia;
 using Microsoft.Maui.Devices;
 
-namespace MauiApp1
+namespace QRDessFree
 {
     public partial class AppPage : ContentPage
     {

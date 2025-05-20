@@ -1,7 +1,7 @@
 using ObjCRuntime;
 using UIKit;
 
-namespace MauiApp1.Mac;
+namespace QRDessFree.Mac;
 
 public class Program
 {

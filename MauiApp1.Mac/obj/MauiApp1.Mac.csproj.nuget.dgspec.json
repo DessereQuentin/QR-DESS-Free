@@ -1,23 +1,23 @@
 {
   "format": 1,
   "restore": {
-    "C:\\Users\\quent\\Downloads\\MauiApp1\\MauiApp1.Mac\\MauiApp1.Mac.csproj": {}
+    "C:\\Users\\antoi\\source\\repos\\QR-DESS-Free\\MauiApp1.Mac\\MauiApp1.Mac.csproj": {}
   },
   "projects": {
-    "C:\\Users\\quent\\Downloads\\MauiApp1\\MauiApp1.Mac\\MauiApp1.Mac.csproj": {
+    "C:\\Users\\antoi\\source\\repos\\QR-DESS-Free\\MauiApp1.Mac\\MauiApp1.Mac.csproj": {
       "version": "1.0.0",
       "restore": {
-        "projectUniqueName": "C:\\Users\\quent\\Downloads\\MauiApp1\\MauiApp1.Mac\\MauiApp1.Mac.csproj",
+        "projectUniqueName": "C:\\Users\\antoi\\source\\repos\\QR-DESS-Free\\MauiApp1.Mac\\MauiApp1.Mac.csproj",
         "projectName": "MauiApp1.Mac",
-        "projectPath": "C:\\Users\\quent\\Downloads\\MauiApp1\\MauiApp1.Mac\\MauiApp1.Mac.csproj",
-        "packagesPath": "C:\\Users\\quent\\.nuget\\packages\\",
-        "outputPath": "C:\\Users\\quent\\Downloads\\MauiApp1\\MauiApp1.Mac\\obj\\",
+        "projectPath": "C:\\Users\\antoi\\source\\repos\\QR-DESS-Free\\MauiApp1.Mac\\MauiApp1.Mac.csproj",
+        "packagesPath": "C:\\Users\\antoi\\.nuget\\packages\\",
+        "outputPath": "C:\\Users\\antoi\\Source\\Repos\\QR-DESS-Free\\MauiApp1.Mac\\obj\\",
         "projectStyle": "PackageReference",
         "fallbackFolders": [
           "C:\\Program Files (x86)\\Microsoft Visual Studio\\Shared\\NuGetPackages"
         ],
         "configFilePaths": [
-          "C:\\Users\\quent\\AppData\\Roaming\\NuGet\\NuGet.Config",
+          "C:\\Users\\antoi\\AppData\\Roaming\\NuGet\\NuGet.Config",
           "C:\\Program Files (x86)\\NuGet\\Config\\Microsoft.VisualStudio.FallbackLocation.config",
           "C:\\Program Files (x86)\\NuGet\\Config\\Microsoft.VisualStudio.Offline.config"
         ],
@@ -30,11 +30,11 @@
           "https://api.nuget.org/v3/index.json": {}
         },
         "frameworks": {
-          "net9.0-maccatalyst18.4": {
+          "net9.0-maccatalyst18.2": {
             "targetAlias": "net9.0-maccatalyst",
             "projectReferences": {
-              "C:\\Users\\quent\\Downloads\\MauiApp1\\MauiApp1\\MauiApp1.csproj": {
-                "projectPath": "C:\\Users\\quent\\Downloads\\MauiApp1\\MauiApp1\\MauiApp1.csproj"
+              "C:\\Users\\antoi\\source\\repos\\QR-DESS-Free\\MauiApp1\\MauiApp1.csproj": {
+                "projectPath": "C:\\Users\\antoi\\source\\repos\\QR-DESS-Free\\MauiApp1\\MauiApp1.csproj"
               }
             }
           }
@@ -52,7 +52,7 @@
         "SdkAnalysisLevel": "9.0.200"
       },
       "frameworks": {
-        "net9.0-maccatalyst18.4": {
+        "net9.0-maccatalyst18.2": {
           "targetAlias": "net9.0-maccatalyst",
           "dependencies": {
             "Microsoft.Extensions.Logging.Debug": {
@@ -61,7 +61,7 @@
             },
             "Microsoft.Maui.Controls": {
               "target": "Package",
-              "version": "[9.0.51, )"
+              "version": "[9.0.14, )"
             },
             "Microsoft.Maui.Graphics.Skia": {
               "target": "Package",
@@ -94,12 +94,6 @@
           ],
           "assetTargetFallback": true,
           "warn": true,
-          "downloadDependencies": [
-            {
-              "name": "Microsoft.NETCore.App.Ref",
-              "version": "[9.0.4, 9.0.4]"
-            }
-          ],
           "frameworkReferences": {
             "Microsoft.MacCatalyst": {
               "privateAssets": "all"
@@ -112,25 +106,28 @@
         }
       },
       "runtimes": {
+        "maccatalyst-arm64": {
+          "#import": []
+        },
         "maccatalyst-x64": {
           "#import": []
         }
       }
     },
-    "C:\\Users\\quent\\Downloads\\MauiApp1\\MauiApp1\\MauiApp1.csproj": {
+    "C:\\Users\\antoi\\source\\repos\\QR-DESS-Free\\MauiApp1\\MauiApp1.csproj": {
       "version": "1.0.0",
       "restore": {
-        "projectUniqueName": "C:\\Users\\quent\\Downloads\\MauiApp1\\MauiApp1\\MauiApp1.csproj",
+        "projectUniqueName": "C:\\Users\\antoi\\source\\repos\\QR-DESS-Free\\MauiApp1\\MauiApp1.csproj",
         "projectName": "MauiApp1",
-        "projectPath": "C:\\Users\\quent\\Downloads\\MauiApp1\\MauiApp1\\MauiApp1.csproj",
-        "packagesPath": "C:\\Users\\quent\\.nuget\\packages\\",
-        "outputPath": "C:\\Users\\quent\\Downloads\\MauiApp1\\MauiApp1\\obj\\",
+        "projectPath": "C:\\Users\\antoi\\source\\repos\\QR-DESS-Free\\MauiApp1\\MauiApp1.csproj",
+        "packagesPath": "C:\\Users\\antoi\\.nuget\\packages\\",
+        "outputPath": "C:\\Users\\antoi\\Source\\Repos\\QR-DESS-Free\\MauiApp1\\obj\\",
         "projectStyle": "PackageReference",
         "fallbackFolders": [
           "C:\\Program Files (x86)\\Microsoft Visual Studio\\Shared\\NuGetPackages"
         ],
         "configFilePaths": [
-          "C:\\Users\\quent\\AppData\\Roaming\\NuGet\\NuGet.Config",
+          "C:\\Users\\antoi\\AppData\\Roaming\\NuGet\\NuGet.Config",
           "C:\\Program Files (x86)\\NuGet\\Config\\Microsoft.VisualStudio.FallbackLocation.config",
           "C:\\Program Files (x86)\\NuGet\\Config\\Microsoft.VisualStudio.Offline.config"
         ],
@@ -170,7 +167,7 @@
             },
             "Microsoft.Maui.Controls": {
               "target": "Package",
-              "version": "[9.0.51, )"
+              "version": "[9.0.14, )"
             },
             "Microsoft.Maui.Graphics.Skia": {
               "target": "Package",
