@@ -1,7 +1,20 @@
 {
   "Version": 1,
   "WorkspaceRootPath": "C:\\Users\\antoi\\source\\repos\\QR-DESS-Free\\",
-  "Documents": [],
+  "Documents": [
+    {
+      "AbsoluteMoniker": "D:0:0:{D4CD1F6E-E4D7-493F-9325-F99DF6E17C93}|MauiApp1.Droid\\QRDessFree.Droid.csproj|c:\\users\\antoi\\source\\repos\\qr-dess-free\\mauiapp1.droid\\qrdessfree.droid.csproj||{FA3CD31E-987B-443A-9B81-186104E8DAC1}|",
+      "RelativeMoniker": "D:0:0:{D4CD1F6E-E4D7-493F-9325-F99DF6E17C93}|MauiApp1.Droid\\QRDessFree.Droid.csproj|solutionrelative:mauiapp1.droid\\qrdessfree.droid.csproj||{FA3CD31E-987B-443A-9B81-186104E8DAC1}|"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{246133BB-F102-4B03-A009-A39378B45D8F}|MauiApp1\\QRDessFree.csproj|c:\\users\\antoi\\source\\repos\\qr-dess-free\\mauiapp1\\clsgenereqrcode.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{246133BB-F102-4B03-A009-A39378B45D8F}|MauiApp1\\QRDessFree.csproj|solutionrelative:mauiapp1\\clsgenereqrcode.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{D4CD1F6E-E4D7-493F-9325-F99DF6E17C93}|MauiApp1.Droid\\QRDessFree.Droid.csproj|c:\\users\\antoi\\source\\repos\\qr-dess-free\\mauiapp1.droid\\qrdessfree.droid.csproj||{04B8AB82-A572-4FEF-95CE-5222444B6B64}|",
+      "RelativeMoniker": "D:0:0:{D4CD1F6E-E4D7-493F-9325-F99DF6E17C93}|MauiApp1.Droid\\QRDessFree.Droid.csproj|solutionrelative:mauiapp1.droid\\qrdessfree.droid.csproj||{04B8AB82-A572-4FEF-95CE-5222444B6B64}|"
+    }
+  ],
   "DocumentGroupContainers": [
     {
       "Orientation": 0,
@@ -9,11 +22,48 @@
       "DocumentGroups": [
         {
           "DockedWidth": 141,
-          "SelectedChildIndex": -1,
+          "SelectedChildIndex": 1,
           "Children": [
             {
               "$type": "Bookmark",
               "Name": "ST:0:0:{1c4feeaa-4718-4aa9-859d-94ce25d182ba}"
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 0,
+              "Title": "QRDessFree.Droid.csproj",
+              "DocumentMoniker": "C:\\Users\\antoi\\source\\repos\\QR-DESS-Free\\MauiApp1.Droid\\QRDessFree.Droid.csproj",
+              "RelativeDocumentMoniker": "MauiApp1.Droid\\QRDessFree.Droid.csproj",
+              "ToolTip": "C:\\Users\\antoi\\source\\repos\\QR-DESS-Free\\MauiApp1.Droid\\QRDessFree.Droid.csproj",
+              "RelativeToolTip": "MauiApp1.Droid\\QRDessFree.Droid.csproj",
+              "ViewState": "AgIAAAAAAAAAAAAAAAAAAAgAAAAZAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000758|",
+              "WhenOpened": "2025-05-23T12:44:01.763Z",
+              "EditorCaption": ""
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 1,
+              "Title": "CLSGenereQRCode.cs",
+              "DocumentMoniker": "C:\\Users\\antoi\\source\\repos\\QR-DESS-Free\\MauiApp1\\CLSGenereQRCode.cs",
+              "RelativeDocumentMoniker": "MauiApp1\\CLSGenereQRCode.cs",
+              "ToolTip": "C:\\Users\\antoi\\source\\repos\\QR-DESS-Free\\MauiApp1\\CLSGenereQRCode.cs",
+              "RelativeToolTip": "MauiApp1\\CLSGenereQRCode.cs",
+              "ViewState": "AgIAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2025-05-23T12:43:49.025Z"
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 2,
+              "Title": "QRDessFree.Droid",
+              "DocumentMoniker": "C:\\Users\\antoi\\source\\repos\\QR-DESS-Free\\MauiApp1.Droid\\QRDessFree.Droid.csproj",
+              "RelativeDocumentMoniker": "MauiApp1.Droid\\QRDessFree.Droid.csproj",
+              "ToolTip": "C:\\Users\\antoi\\source\\repos\\QR-DESS-Free\\MauiApp1.Droid\\QRDessFree.Droid.csproj",
+              "RelativeToolTip": "MauiApp1.Droid\\QRDessFree.Droid.csproj",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000758|",
+              "WhenOpened": "2025-05-23T12:19:24.251Z",
+              "EditorCaption": ""
             }
           ]
         }

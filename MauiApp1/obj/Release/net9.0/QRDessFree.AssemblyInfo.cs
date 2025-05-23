@@ -14,7 +14,7 @@ using System.Reflection;
 [assembly: System.Reflection.AssemblyCompanyAttribute("DESSERE")]
 [assembly: System.Reflection.AssemblyConfigurationAttribute("Release")]
 [assembly: System.Reflection.AssemblyFileVersionAttribute("1.0.0.0")]
-[assembly: System.Reflection.AssemblyInformationalVersionAttribute("1.0.0+e76b41a1c53fbdaca3a597d0068bf02ad843dc1f")]
+[assembly: System.Reflection.AssemblyInformationalVersionAttribute("1.0.0+e872e018e3478e4ed5ce6678174cf03767cbb65d")]
 [assembly: System.Reflection.AssemblyProductAttribute("QRDessFree")]
 [assembly: System.Reflection.AssemblyTitleAttribute("QRDessFree")]
 [assembly: System.Reflection.AssemblyVersionAttribute("1.0.0.0")]

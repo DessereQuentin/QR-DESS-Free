@@ -3,8 +3,8 @@
   <PropertyGroup>
     <SelectedDevice>Windows Subsystem for Android</SelectedDevice>
     <SelectedPlatformGroup>Emulator</SelectedPlatformGroup>
-    <ActiveDebugProfile>pixel_7_-_api_35</ActiveDebugProfile>
-    <DefaultDevice>pixel_7_-_api_35</DefaultDevice>
+    <ActiveDebugProfile>Windows Subsystem for Android (Android 13.0 - API 33)</ActiveDebugProfile>
+    <DefaultDevice>Windows Subsystem for Android</DefaultDevice>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|AnyCPU'">
     <DebuggerFlavor>ProjectDebugger</DebuggerFlavor>
