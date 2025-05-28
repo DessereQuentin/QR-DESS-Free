@@ -64,6 +64,11 @@ namespace QRDessFree
         /// <summary>Permet d'incoporer une image au QRCode</summary>
         private async void OnIncorporeClicked(object sender, EventArgs e)
         {
+            if (qrCodeView.Drawable == null)
+            {
+                await DisplayAlert("Incorporation d'image", "Veuillez d'abord générer un QR Code.", "OK");
+                return;
+            }
             int retour = await IncorporeImage();
  
         }
@@ -80,7 +85,6 @@ namespace QRDessFree
                 await DisplayAlert("Génération du QR Code", "Veuillez entrer un texte à encoder.", "OK");
                 qrCodeView.Drawable = null;
                 qrCodeView.Invalidate(); 
-                btnIncorpore.IsVisible = false;
                 return;
             }
 
@@ -113,14 +117,12 @@ namespace QRDessFree
                 await DisplayAlert("Génération du QR Code", "La chaine à générer est trop longue pour la capacité d'un QR Code. Essayez de réduire le niveau de correction", "OK");
                 qrCodeView.Drawable = null;
                 qrCodeView.Invalidate();
-                btnIncorpore.IsVisible = false;
                 return;
             }
             qrCodeView.WidthRequest = imagesize;
             qrCodeView.HeightRequest = imagesize;
             qrCodeView.Drawable = qrDrawable;
             qrCodeView.Invalidate(); // Redessiner la vue
-            btnIncorpore.IsVisible = true;
 
         }
 

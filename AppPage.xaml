@@ -63,11 +63,6 @@
                 <GraphicsView x:Name="qrCodeView" WidthRequest="250" HeightRequest="250" StartInteraction="OnIncorporeClicked"/>
             </Border>
 
-            <HorizontalStackLayout HorizontalOptions="Center" VerticalOptions="Center">
-                <Button x:Name="btnIncorpore" Text="Incorporer une image" IsVisible="False" Clicked="OnIncorporeClicked"/>
-            </HorizontalStackLayout>
-
-
         </VerticalStackLayout>
     </ScrollView>
 </ContentPage>
