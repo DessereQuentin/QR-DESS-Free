@@ -3,12 +3,28 @@
   "WorkspaceRootPath": "C:\\SaveQRDessFree\\QR-DESS-Free\\",
   "Documents": [
     {
-      "AbsoluteMoniker": "D:0:0:{98FEBAE6-7873-460D-870C-1DA2CE19743F}|QRDessFree.csproj|c:\\saveqrdessfree\\qr-dess-free\\apppage.xaml.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
-      "RelativeMoniker": "D:0:0:{98FEBAE6-7873-460D-870C-1DA2CE19743F}|QRDessFree.csproj|solutionrelative:apppage.xaml.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+      "AbsoluteMoniker": "D:0:0:{98FEBAE6-7873-460D-870C-1DA2CE19743F}|QRDessFree.csproj|c:\\saveqrdessfree\\qr-dess-free\\app.xaml||{F11ACC28-31D1-4C80-A34B-F4E09D3D753C}",
+      "RelativeMoniker": "D:0:0:{98FEBAE6-7873-460D-870C-1DA2CE19743F}|QRDessFree.csproj|solutionrelative:app.xaml||{F11ACC28-31D1-4C80-A34B-F4E09D3D753C}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{98FEBAE6-7873-460D-870C-1DA2CE19743F}|QRDessFree.csproj|c:\\saveqrdessfree\\qr-dess-free\\app.xaml.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{98FEBAE6-7873-460D-870C-1DA2CE19743F}|QRDessFree.csproj|solutionrelative:app.xaml.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{98FEBAE6-7873-460D-870C-1DA2CE19743F}|QRDessFree.csproj|c:\\saveqrdessfree\\qr-dess-free\\appshell.xaml||{F11ACC28-31D1-4C80-A34B-F4E09D3D753C}",
+      "RelativeMoniker": "D:0:0:{98FEBAE6-7873-460D-870C-1DA2CE19743F}|QRDessFree.csproj|solutionrelative:appshell.xaml||{F11ACC28-31D1-4C80-A34B-F4E09D3D753C}"
     },
     {
       "AbsoluteMoniker": "D:0:0:{98FEBAE6-7873-460D-870C-1DA2CE19743F}|QRDessFree.csproj|c:\\saveqrdessfree\\qr-dess-free\\apppage.xaml||{F11ACC28-31D1-4C80-A34B-F4E09D3D753C}",
       "RelativeMoniker": "D:0:0:{98FEBAE6-7873-460D-870C-1DA2CE19743F}|QRDessFree.csproj|solutionrelative:apppage.xaml||{F11ACC28-31D1-4C80-A34B-F4E09D3D753C}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{98FEBAE6-7873-460D-870C-1DA2CE19743F}|QRDessFree.csproj|c:\\saveqrdessfree\\qr-dess-free\\mainpage.xaml||{F11ACC28-31D1-4C80-A34B-F4E09D3D753C}",
+      "RelativeMoniker": "D:0:0:{98FEBAE6-7873-460D-870C-1DA2CE19743F}|QRDessFree.csproj|solutionrelative:mainpage.xaml||{F11ACC28-31D1-4C80-A34B-F4E09D3D753C}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{98FEBAE6-7873-460D-870C-1DA2CE19743F}|QRDessFree.csproj|c:\\saveqrdessfree\\qr-dess-free\\apppage.xaml.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{98FEBAE6-7873-460D-870C-1DA2CE19743F}|QRDessFree.csproj|solutionrelative:apppage.xaml.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
     },
     {
       "AbsoluteMoniker": "D:0:0:{98FEBAE6-7873-460D-870C-1DA2CE19743F}|QRDessFree.csproj|c:\\saveqrdessfree\\qr-dess-free\\clsgenereqrcode.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
@@ -26,37 +42,93 @@
       "DocumentGroups": [
         {
           "DockedWidth": 141,
-          "SelectedChildIndex": 1,
+          "SelectedChildIndex": 4,
           "Children": [
+            {
+              "$type": "Bookmark",
+              "Name": "ST:0:0:{1c4feeaa-4718-4aa9-859d-94ce25d182ba}"
+            },
             {
               "$type": "Document",
               "DocumentIndex": 1,
+              "Title": "App.xaml.cs",
+              "DocumentMoniker": "C:\\SaveQRDessFree\\QR-DESS-Free\\App.xaml.cs",
+              "RelativeDocumentMoniker": "App.xaml.cs",
+              "ToolTip": "C:\\SaveQRDessFree\\QR-DESS-Free\\App.xaml.cs",
+              "RelativeToolTip": "App.xaml.cs",
+              "ViewState": "AgIAAAAAAAAAAAAAAAAAAA4AAAABAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2025-05-28T17:43:24.52Z",
+              "EditorCaption": ""
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 2,
+              "Title": "AppShell.xaml",
+              "DocumentMoniker": "C:\\SaveQRDessFree\\QR-DESS-Free\\AppShell.xaml",
+              "RelativeDocumentMoniker": "AppShell.xaml",
+              "ToolTip": "C:\\SaveQRDessFree\\QR-DESS-Free\\AppShell.xaml",
+              "RelativeToolTip": "AppShell.xaml",
+              "ViewState": "AgIAAAAAAAAAAAAAAAAAAAwAAAAbAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.003549|",
+              "WhenOpened": "2025-05-28T17:36:34.18Z",
+              "EditorCaption": ""
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 4,
+              "Title": "MainPage.xaml",
+              "DocumentMoniker": "C:\\SaveQRDessFree\\QR-DESS-Free\\MainPage.xaml",
+              "RelativeDocumentMoniker": "MainPage.xaml",
+              "ToolTip": "C:\\SaveQRDessFree\\QR-DESS-Free\\MainPage.xaml",
+              "RelativeToolTip": "MainPage.xaml",
+              "ViewState": "AgIAAAAAAAAAAAAAAAAAAAQAAAArAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.003549|",
+              "WhenOpened": "2025-05-28T17:06:41.149Z",
+              "EditorCaption": ""
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 0,
+              "Title": "App.xaml",
+              "DocumentMoniker": "C:\\SaveQRDessFree\\QR-DESS-Free\\App.xaml",
+              "RelativeDocumentMoniker": "App.xaml",
+              "ToolTip": "C:\\SaveQRDessFree\\QR-DESS-Free\\App.xaml",
+              "RelativeToolTip": "App.xaml",
+              "ViewState": "AgIAAAAAAAAAAAAAAAAAAAcAAAAMAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.003549|",
+              "WhenOpened": "2025-05-28T17:05:27.052Z",
+              "EditorCaption": ""
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 3,
               "Title": "AppPage.xaml",
               "DocumentMoniker": "C:\\SaveQRDessFree\\QR-DESS-Free\\AppPage.xaml",
               "RelativeDocumentMoniker": "AppPage.xaml",
               "ToolTip": "C:\\SaveQRDessFree\\QR-DESS-Free\\AppPage.xaml",
               "RelativeToolTip": "AppPage.xaml",
-              "ViewState": "AgIAACoAAAAAAAAAAAAAAD4AAABzAAAAAAAAAA==",
+              "ViewState": "AgIAAAAAAAAAAAAAAAAAAB4AAAAYAAAAAAAAAA==",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.003549|",
               "WhenOpened": "2025-05-28T16:07:40.206Z",
               "EditorCaption": ""
             },
             {
               "$type": "Document",
-              "DocumentIndex": 0,
+              "DocumentIndex": 5,
               "Title": "AppPage.xaml.cs",
               "DocumentMoniker": "C:\\SaveQRDessFree\\QR-DESS-Free\\AppPage.xaml.cs",
               "RelativeDocumentMoniker": "AppPage.xaml.cs",
               "ToolTip": "C:\\SaveQRDessFree\\QR-DESS-Free\\AppPage.xaml.cs",
               "RelativeToolTip": "AppPage.xaml.cs",
-              "ViewState": "AgIAACgAAAAAAAAAAAAYwEcAAAAMAAAAAAAAAA==",
+              "ViewState": "AgIAAAAAAAAAAAAAAAAAAD0AAAAJAAAAAAAAAA==",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
               "WhenOpened": "2025-05-27T06:07:30.635Z",
               "EditorCaption": ""
             },
             {
               "$type": "Document",
-              "DocumentIndex": 3,
+              "DocumentIndex": 7,
               "Title": "AboutAssets.txt",
               "DocumentMoniker": "C:\\SaveQRDessFree\\QR-DESS-Free\\Resources\\Raw\\AboutAssets.txt",
               "RelativeDocumentMoniker": "Resources\\Raw\\AboutAssets.txt",
@@ -64,11 +136,12 @@
               "RelativeToolTip": "Resources\\Raw\\AboutAssets.txt",
               "ViewState": "AgIAAAAAAAAAAAAAAAAAAAoAAAAaAAAAAAAAAA==",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.003109|",
-              "WhenOpened": "2025-05-27T06:07:23.501Z"
+              "WhenOpened": "2025-05-27T06:07:23.501Z",
+              "EditorCaption": ""
             },
             {
               "$type": "Document",
-              "DocumentIndex": 2,
+              "DocumentIndex": 6,
               "Title": "CLSGenereQRCode.cs",
               "DocumentMoniker": "C:\\SaveQRDessFree\\QR-DESS-Free\\CLSGenereQRCode.cs",
               "RelativeDocumentMoniker": "CLSGenereQRCode.cs",
@@ -76,7 +149,8 @@
               "RelativeToolTip": "CLSGenereQRCode.cs",
               "ViewState": "AgIAAEUEAAAAAAAAAAAqwFMEAAAxAAAAAAAAAA==",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
-              "WhenOpened": "2025-05-26T19:34:16.939Z"
+              "WhenOpened": "2025-05-26T19:34:16.939Z",
+              "EditorCaption": ""
             }
           ]
         }

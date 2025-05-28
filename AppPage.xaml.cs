@@ -64,6 +64,9 @@ namespace QRDessFree
         /// <summary>Permet d'incoporer une image au QRCode</summary>
         private async void OnIncorporeClicked(object sender, EventArgs e)
         {
+           
+
+           
             if (qrCodeView.Drawable == null)
             {
                 await DisplayAlert("Incorporation d'image", "Veuillez d'abord générer un QR Code.", "OK");

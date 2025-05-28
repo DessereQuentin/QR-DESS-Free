@@ -21,10 +21,10 @@
         <!-- Niveau de correction -->
         <Label Text="Niveau de correction :" />
         <HorizontalStackLayout>
-            <RadioButton x:Name="rbL" Content="L" GroupName="CorrectionLevel" IsChecked="True"/>
-            <RadioButton x:Name="rbM" Content="M" GroupName="CorrectionLevel"/>
-            <RadioButton x:Name="rbQ" Content="Q" GroupName="CorrectionLevel"/>
-            <RadioButton x:Name="rbH" Content="H" GroupName="CorrectionLevel"/>
+            <RadioButton x:Name="rbL" Content="L" GroupName="CorrectionLevel" IsChecked="True" />
+            <RadioButton x:Name="rbM" Content="M" GroupName="CorrectionLevel" />
+            <RadioButton x:Name="rbQ" Content="Q" GroupName="CorrectionLevel" />
+            <RadioButton x:Name="rbH" Content="H" GroupName="CorrectionLevel" />
         </HorizontalStackLayout>
 
         <HorizontalStackLayout
