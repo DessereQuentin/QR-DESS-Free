@@ -1,16 +1,9 @@
+﻿
 Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio Version 17
 VisualStudioVersion = 17.13.35825.156
 MinimumVisualStudioVersion = 10.0.40219.1
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "QRDessFree", "MauiApp1\QRDessFree.csproj", "{246133BB-F102-4B03-A009-A39378B45D8F}"
-EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "QRDessFree.Droid", "MauiApp1.Droid\QRDessFree.Droid.csproj", "{D4CD1F6E-E4D7-493F-9325-F99DF6E17C93}"
-EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "QRDessFree.iOS", "MauiApp1.iOS\QRDessFree.iOS.csproj", "{4A78C848-C73B-4561-B9EA-A301E3D992D3}"
-EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "QRDessFree.Mac", "MauiApp1.Mac\QRDessFree.Mac.csproj", "{489A94D3-571B-4807-85BA-3FAFF4B38DC7}"
-EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "QRDessFree.WinUI", "MauiApp1.WinUI\QRDessFree.WinUI.csproj", "{BD078457-B3B6-4B7A-A98B-59218B03D08C}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "QRDessFree", "QRDessFree.csproj", "{98FEBAE6-7873-460D-870C-1DA2CE19743F}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -18,37 +11,16 @@ Global
 		Release|Any CPU = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(ProjectConfigurationPlatforms) = postSolution
-		{246133BB-F102-4B03-A009-A39378B45D8F}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{246133BB-F102-4B03-A009-A39378B45D8F}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{246133BB-F102-4B03-A009-A39378B45D8F}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{246133BB-F102-4B03-A009-A39378B45D8F}.Release|Any CPU.Build.0 = Release|Any CPU
-		{D4CD1F6E-E4D7-493F-9325-F99DF6E17C93}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{D4CD1F6E-E4D7-493F-9325-F99DF6E17C93}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{D4CD1F6E-E4D7-493F-9325-F99DF6E17C93}.Debug|Any CPU.Deploy.0 = Debug|Any CPU
-		{D4CD1F6E-E4D7-493F-9325-F99DF6E17C93}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{D4CD1F6E-E4D7-493F-9325-F99DF6E17C93}.Release|Any CPU.Build.0 = Release|Any CPU
-		{D4CD1F6E-E4D7-493F-9325-F99DF6E17C93}.Release|Any CPU.Deploy.0 = Release|Any CPU
-		{4A78C848-C73B-4561-B9EA-A301E3D992D3}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{4A78C848-C73B-4561-B9EA-A301E3D992D3}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{4A78C848-C73B-4561-B9EA-A301E3D992D3}.Debug|Any CPU.Deploy.0 = Debug|Any CPU
-		{4A78C848-C73B-4561-B9EA-A301E3D992D3}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{4A78C848-C73B-4561-B9EA-A301E3D992D3}.Release|Any CPU.Build.0 = Release|Any CPU
-		{4A78C848-C73B-4561-B9EA-A301E3D992D3}.Release|Any CPU.Deploy.0 = Release|Any CPU
-		{489A94D3-571B-4807-85BA-3FAFF4B38DC7}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{489A94D3-571B-4807-85BA-3FAFF4B38DC7}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{489A94D3-571B-4807-85BA-3FAFF4B38DC7}.Debug|Any CPU.Deploy.0 = Debug|Any CPU
-		{489A94D3-571B-4807-85BA-3FAFF4B38DC7}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{489A94D3-571B-4807-85BA-3FAFF4B38DC7}.Release|Any CPU.Build.0 = Release|Any CPU
-		{489A94D3-571B-4807-85BA-3FAFF4B38DC7}.Release|Any CPU.Deploy.0 = Release|Any CPU
-		{BD078457-B3B6-4B7A-A98B-59218B03D08C}.Debug|Any CPU.ActiveCfg = Debug|x64
-		{BD078457-B3B6-4B7A-A98B-59218B03D08C}.Debug|Any CPU.Build.0 = Debug|x64
-		{BD078457-B3B6-4B7A-A98B-59218B03D08C}.Release|Any CPU.ActiveCfg = Release|x64
-		{BD078457-B3B6-4B7A-A98B-59218B03D08C}.Release|Any CPU.Build.0 = Release|x64
+		{98FEBAE6-7873-460D-870C-1DA2CE19743F}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{98FEBAE6-7873-460D-870C-1DA2CE19743F}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{98FEBAE6-7873-460D-870C-1DA2CE19743F}.Debug|Any CPU.Deploy.0 = Debug|Any CPU
+		{98FEBAE6-7873-460D-870C-1DA2CE19743F}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{98FEBAE6-7873-460D-870C-1DA2CE19743F}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
 	EndGlobalSection
 	GlobalSection(ExtensibilityGlobals) = postSolution
-		SolutionGuid = {B4D83198-8474-4E67-A5C7-712CC6BBB502}
+		SolutionGuid = {D9256C6C-BFF2-49CC-B4D1-9CFB9B702922}
 	EndGlobalSection
 EndGlobal
