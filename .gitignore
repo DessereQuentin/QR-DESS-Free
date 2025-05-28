@@ -1,0 +1,86 @@
+# --- MAUI / .NET ---
+bin/
+obj/
+*.exe
+*.dll
+*.app
+*.apk
+*.aab
+*.ipa
+*.pdb
+*.cache
+*.log
+*.vspscc
+*.user
+*.suo
+*.csproj.user
+*.vcxproj.user
+*.sln.docstates
+*.vscode/*
+*.tmp
+*.bak
+
+# --- Visual Studio / Rider / VS Code ---
+.vs/
+.idea/
+.vscode/
+*.sdf
+*.opensdf
+*.dbmdl
+*.pidb
+*.userprefs
+
+# --- OS-specific ---
+.DS_Store
+Thumbs.db
+ehthumbs.db
+*.swp
+*~
+
+# --- MAUI specific ---
+.platform/
+**/Resources/Raw/*.zip
+**/Platforms/Android/obj/
+**/Platforms/Android/bin/
+**/Platforms/iOS/obj/
+**/Platforms/iOS/bin/
+**/Platforms/MacCatalyst/obj/
+**/Platforms/MacCatalyst/bin/
+**/Platforms/Windows/obj/
+**/Platforms/Windows/bin/
+
+# --- Build artifacts ---
+*.publishsettings
+*.publish.xml
+*.publishproj
+*.generated.cs
+*.nupkg
+*.snupkg
+project.lock.json
+project.fragment.lock.json
+
+# --- Test results ---
+TestResults/
+*.trx
+*.coverage
+*.coveragexml
+*.codecoverage
+
+# --- User secrets ---
+secrets.json
+
+# --- JetBrains Rider cache ---
+.idea/
+.idea/**
+
+# --- Optional: images/temp/cache ---
+*.png
+*.jpg
+*.jpeg
+*.gif
+*.bmp
+*.svg
+*.ico
+*.icns
+.cache/
+*.temp
