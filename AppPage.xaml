@@ -36,25 +36,18 @@
                 <Button x:Name="btnGenerate" Text="Générer le QR Code" Clicked="OnGenerateQRCodeClicked"/>
 
                 <!-- Bouton Partager avec bordure -->
-                <Border
-                    Stroke="Gray"
-                    StrokeThickness="1"
-                    BackgroundColor="Transparent"
-                    StrokeShape="RoundRectangle 8"
-                    WidthRequest="48"
-                    HeightRequest="48"
-                    Padding="6"
-                    VerticalOptions="Center">
-
-                    <ImageButton
-                        Source="share.png"
-                        Clicked="OnShareQrCodeClicked"
-                        BackgroundColor="Transparent"
-                        WidthRequest="32"
-                        HeightRequest="32"
-                        HorizontalOptions="Center"
-                        VerticalOptions="Center" />
-                </Border>
+                <Button
+    Clicked="OnShareQrCodeClicked"
+    HeightRequest="45"
+    WidthRequest="45"
+    BorderWidth="1"
+    BorderColor="Gray"
+    CornerRadius="8">
+                    <Button.ImageSource>
+                       
+                        <AppThemeBinding Light="share.png" Dark="sharedark.png" />
+                    </Button.ImageSource>
+                </Button>
             </HorizontalStackLayout>
 
 
