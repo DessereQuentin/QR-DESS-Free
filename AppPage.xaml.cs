@@ -64,69 +64,102 @@ namespace QRDessFree
         /// <summary>Permet d'incoporer une image au QRCode</summary>
         private async void OnIncorporeClicked(object sender, EventArgs e)
         {
-           
+
+            try
+
+            {
+                if (qrCodeView.Drawable == null)
+                {
+                    await DisplayAlert("Incorporation d'image", "Veuillez d'abord générer un QR Code.", "OK");
+                    return;
+                }
+                int retour = await IncorporeImage();
+            }
+
+            catch (Exception ex)
+
+            {
+
+                // Gestion de l'erreur : journaliser, afficher, etc.
+
+                await DisplayAlert("Exception", ex.Message + "\n Votre appli a rencontré un problème, veuillez contacter le développeur", "OK");
+
+            }
+
 
            
-            if (qrCodeView.Drawable == null)
-            {
-                await DisplayAlert("Incorporation d'image", "Veuillez d'abord générer un QR Code.", "OK");
-                return;
-            }
-            int retour = await IncorporeImage();
  
         }
 
         /// <summary>Déclenche la génération du QRCode</summary>
         private async void  OnGenerateQRCodeClicked(object sender, EventArgs e)
         {
-            // Récupérer le texte saisi
-            string texte = txtInput.Text;
+            try
 
-            // Vérifier qu'un texte est bien entré
-            if (string.IsNullOrWhiteSpace(texte))
             {
-                await DisplayAlert("Génération du QR Code", "Veuillez entrer un texte à encoder.", "OK");
-                qrCodeView.Drawable = null;
-                qrCodeView.Invalidate(); 
-                return;
+            
+                // Récupérer le texte saisi
+                string texte = txtInput.Text;
+
+                // Vérifier qu'un texte est bien entré
+                if (string.IsNullOrWhiteSpace(texte))
+                {
+                    await DisplayAlert("Génération du QR Code", "Veuillez entrer un texte à encoder.", "OK");
+                    qrCodeView.Drawable = null;
+                    qrCodeView.Invalidate();
+                    return;
+                }
+
+                // Récupérer le niveau de correction sélectionné
+                string correctionLevel = "L"; // Valeur par défaut
+                if (rbM.IsChecked) correctionLevel = "M";
+                else if (rbQ.IsChecked) correctionLevel = "Q";
+                else if (rbH.IsChecked) correctionLevel = "H";
+
+                //Conserver le taux de correction
+                switch (correctionLevel)
+                {
+                    case "L": PourcentCorrection = 7; break;
+                    case "M": PourcentCorrection = 15; break;
+                    case "Q": PourcentCorrection = 25; break;
+                    case "H": PourcentCorrection = 30; break;
+                }
+
+                //Reset l'image à incorporer
+                imageAIncorporer = null;
+                saveFilenameAIncorporer = "";
+
+                // Récupérer la taille de bordure
+                int imagesize = 0;
+
+                // Générer le QR Code et l'afficher
+                qrDrawable = CLSGenereQRCode.GenereImageQRCode(texte, correctionLevel, tailleBordure, ref imagesize, PourcentCorrection);
+                if (qrDrawable == null)
+                {
+                    await DisplayAlert("Génération du QR Code", "La chaine à générer est trop longue pour la capacité d'un QR Code. Essayez de réduire le niveau de correction", "OK");
+                    qrCodeView.Drawable = null;
+                    qrCodeView.Invalidate();
+                    return;
+                }
+                qrCodeView.WidthRequest = imagesize;
+                qrCodeView.HeightRequest = imagesize;
+                qrCodeView.Drawable = qrDrawable;
+                qrCodeView.Invalidate(); // Redessiner la vue
+
             }
 
-            // Récupérer le niveau de correction sélectionné
-            string correctionLevel = "L"; // Valeur par défaut
-            if (rbM.IsChecked) correctionLevel = "M";
-            else if (rbQ.IsChecked) correctionLevel = "Q";
-            else if (rbH.IsChecked) correctionLevel = "H";
+            catch (Exception ex)
 
-            //Conserver le taux de correction
-            switch (correctionLevel)
             {
-                case "L": PourcentCorrection = 7; break;
-                case "M": PourcentCorrection = 15; break;
-                case "Q": PourcentCorrection = 25; break;
-                case "H": PourcentCorrection = 30; break;
+
+                // Gestion de l'erreur : journaliser, afficher, etc.
+
+                await DisplayAlert("Exception", ex.Message  + "\n Votre appli a rencontré un problème, veuillez contacter le développeur", "OK");
+
+
             }
 
-            //Reset l'image à incorporer
-            imageAIncorporer = null;
-            saveFilenameAIncorporer = "";
-
-            // Récupérer la taille de bordure
-            int imagesize = 0;
-
-            // Générer le QR Code et l'afficher
-            qrDrawable = CLSGenereQRCode.GenereImageQRCode(texte, correctionLevel, tailleBordure, ref imagesize, PourcentCorrection);
-            if (qrDrawable == null)
-            {
-                await DisplayAlert("Génération du QR Code", "La chaine à générer est trop longue pour la capacité d'un QR Code. Essayez de réduire le niveau de correction", "OK");
-                qrCodeView.Drawable = null;
-                qrCodeView.Invalidate();
-                return;
-            }
-            qrCodeView.WidthRequest = imagesize;
-            qrCodeView.HeightRequest = imagesize;
-            qrCodeView.Drawable = qrDrawable;
-            qrCodeView.Invalidate(); // Redessiner la vue
-
+            
         }
 
         /// <summary>On enregistre l'image dans un fichier</summary>
@@ -150,15 +183,32 @@ namespace QRDessFree
         /// <param name="e"></param>
         private async void OnShareQrCodeClicked(object sender, EventArgs e)
         {
-            if (qrCodeView.Drawable != null)
+            try
+
             {
-                var path = await SauvegarderQrCodeAsync(qrCodeView.Drawable, (int)qrCodeView.WidthRequest, (int)qrCodeView.HeightRequest);
-                await Share.Default.RequestAsync(new ShareFileRequest
+                if (qrCodeView.Drawable != null)
                 {
-                    Title = "Partager le QR Code",
-                    File = new ShareFile(path)
-                });
+                    var path = await SauvegarderQrCodeAsync(qrCodeView.Drawable, (int)qrCodeView.WidthRequest, (int)qrCodeView.HeightRequest);
+                    await Share.Default.RequestAsync(new ShareFileRequest
+                    {
+                        Title = "Partager le QR Code",
+                        File = new ShareFile(path)
+                    });
+                }
             }
+
+            catch (Exception ex)
+
+            {
+
+                // Gestion de l'erreur : journaliser, afficher, etc.
+
+                await DisplayAlert("Exception", ex.Message + "\n Votre appli a rencontré un problème, veuillez contacter le développeur", "OK");
+
+
+            }
+
+           
         }
 
 
