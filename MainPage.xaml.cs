@@ -38,7 +38,7 @@ namespace QRDessFree
             // On fait tourner le QRCode de la page de lancement en le faisant grossir
             for (int i=0; i<360;i++)
             {
-                iRotation += 4;
+                iRotation += 6;
                 await QRCodeDESS.RotateTo(iRotation, 1);
                 QRCodeDESS.HeightRequest = i/2;
                 QRCodeDESS.WidthRequest = i/2;

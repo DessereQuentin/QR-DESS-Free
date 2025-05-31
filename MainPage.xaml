@@ -8,13 +8,24 @@
         <StackLayout Spacing="30">
 
             <StackLayout VerticalOptions="Start" HorizontalOptions="CenterAndExpand">
-                <Image
-                   x:Name="Logo"
-                   Source="logo_qrdessfree.bmp"
-                   HeightRequest="128" 
-                   WidthRequest="128" 
-                   Rotation="0"
-                   Aspect="AspectFill" IsVisible="True"/>
+                <Frame
+                    Padding="0"
+                    HasShadow="False"
+                    CornerRadius="20"
+                    HeightRequest="128"
+                    WidthRequest="128"
+                    IsClippedToBounds="True"
+                    BackgroundColor="Transparent">
+                    
+                    <Image
+                        x:Name="Logo"
+                        Source="logo_qrdessfree.bmp"
+                        HeightRequest="128" 
+                        WidthRequest="128" 
+                        Rotation="0"
+                        Aspect="AspectFill"
+                        IsVisible="True"/>
+                </Frame>
             </StackLayout>
 
             <StackLayout VerticalOptions="CenterAndExpand" HorizontalOptions="CenterAndExpand">
