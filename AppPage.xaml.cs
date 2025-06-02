@@ -1,21 +1,6 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using Microsoft.Maui.Controls;
-using SkiaSharp;
-using SkiaSharp.Views.Maui;
-using QRDessFree;
-using System.IO;
-using Microsoft.Maui.ApplicationModel.DataTransfer;
-using Microsoft.Maui.Graphics;
-using Microsoft.Maui.Graphics.Skia;
-using Microsoft.Maui.Devices;
-using Microsoft.Maui.Graphics.Platform;
-using Microsoft.Maui.ApplicationModel;
-using Microsoft.Maui;
+﻿using SkiaSharp;
 using static QRDessFree.CLSGenereQRCode;
+using static QRDessFree.clsGraphicsQRCode;
 
 namespace QRDessFree
 {
@@ -23,10 +8,11 @@ namespace QRDessFree
     {
         /// <summary>Sauvegarde du iDrawable du graphicsView du QrCode</summary>
         private IDrawable qrDrawable;
-        private int PourcentCorrection;
+        private int pourcentCorrection;
         private int tailleBordure = 1;
-        private Microsoft.Maui.Graphics.IImage imageAIncorporer;
-        private string saveFilenameAIncorporer;
+        private int nbBitCorrection = 0; // Nombre de bits de correction du QR Code
+        private SKBitmap saveSKBitmap; // Sauvegarde de l'image détourée pour la réutiliser lors du partage
+
         public AppPage()
         {
             InitializeComponent();
@@ -36,6 +22,7 @@ namespace QRDessFree
         /// <returns>O si aucune image choisie, 1 sinon</returns>
         private async Task<int> IncorporeImage()
         {
+            SKBitmap withBorder;
             // L'utilisateur choisit une image
             var result = await FilePicker.Default.PickAsync(new PickOptions
             {
@@ -46,15 +33,53 @@ namespace QRDessFree
             // S'il n'a pas choisi d'image, on ne fait rien
             if (result == null) return 0;
 
-            // On sauve le nom du fichier pour pouvoir le réouvrir ultérieuremnt lors du partage
-            saveFilenameAIncorporer = result.FullPath;
+            // On sauve le nom du fichier pour pouvoir le réouvrir ultérieurement lors du partage
+            string filenameImage = result.FullPath; //"C:/Temp/YamahaVide.png";
 
-            //On ouvre le fichier
-            using var stream = await result.OpenReadAsync();
-            imageAIncorporer = PlatformImage.FromStream(stream);
+            // Etape 0 on lit l'image et on recherche si elle contient des pixels 
+            using var input = LoadBitmap(filenameImage);
+            bool isPixelTransparent = RecherchePixelTransparent(input);
+
+            // On détermine la taille de la bordure de détourage à partir de la surface du QRCode et de celle de l'image lue
+            double surface = qrCodeView.Width * qrCodeView.Height * (double)pourcentCorrection / 200.0; // On conserve la moitié des bits de correction
+            int tailleBordDetourage =(int)( 2.0 * Math.Sqrt(((double)input.Width * (double)input.Height) / surface));
+            if (tailleBordDetourage < 2) tailleBordDetourage = 2;
+
+            // Etape 1 : On conserve à l'image juste un cadre minimum de pixels blancs/transparents
+            var withCadre = AddTransparentBorder(input, isPixelTransparent, tailleBordDetourage);
+
+            // Etape 2 : on réduit l'image à sa taille cible pour améliorer la performance du détourage 
+            SKBitmap imageReduite;
+            if (withCadre.Width * withCadre.Height > 100000) imageReduite = ReduitImage(withCadre, qrCodeView.Width, qrCodeView.Height, 100000);
+            else imageReduite = withCadre;
+
+            using (imageReduite)
+            {
+                SKBitmap transparent;
+
+                // Étape 3 : si aucun pixel de transparence, suppression du fond blanc
+                if (isPixelTransparent == false) transparent = RemoveWhiteBorder(imageReduite);
+                else transparent = imageReduite;
+
+                // Suite du traitement de l'image
+                using (transparent)
+                {
+                    // On recalcule la taille de la bordure sur l'image réduite
+                    tailleBordDetourage = (int)(2.0 * Math.Sqrt(((double)imageReduite.Width * (double)imageReduite.Height) / surface));
+                    if (tailleBordDetourage < 2) tailleBordDetourage = 2;
+
+                    // Étape 4 : on ajoute une bordure blanche autour de l'image 
+                    withBorder = AddWhiteOutline(transparent, tailleBordDetourage);
+
+                    // Etape 5 : on enregistre le résultat dans le cache
+                    string cachePath = Microsoft.Maui.Storage.FileSystem.CacheDirectory;
+                    saveSKBitmap = withBorder;
+
+                }
+            }
 
             // On affecte le résultat fusionné à la vue graphique
-            qrDrawable = new ImageDrawable(imageAIncorporer, PourcentCorrection, ModulesQRCode, tailleBordure);
+            qrDrawable = new ImageDrawable(ConvertSKBitmapToMauiImage(withBorder), pourcentCorrection, ModulesQRCode, tailleBordure);
             qrCodeView.Drawable = qrDrawable;
             qrCodeView.Invalidate();
 
@@ -77,18 +102,11 @@ namespace QRDessFree
             }
 
             catch (Exception ex)
-
             {
-
-                // Gestion de l'erreur : journaliser, afficher, etc.
-
-                await DisplayAlert("Exception", ex.Message + "\n Votre appli a rencontré un problème, veuillez contacter le développeur", "OK");
-
+                // Affichage message d'erreur
+                await DisplayAlert("Exception", "Votre application QR Dess Free a rencontré un problème, veuillez contacter le développeur en lui communiquant le message ci-dessous :\n\n"
+                   + $"{ex}", "OK");
             }
-
-
-           
- 
         }
 
         /// <summary>Déclenche la génération du QRCode</summary>
@@ -116,24 +134,15 @@ namespace QRDessFree
                 else if (rbQ.IsChecked) correctionLevel = "Q";
                 else if (rbH.IsChecked) correctionLevel = "H";
 
-                //Conserver le taux de correction
-                switch (correctionLevel)
-                {
-                    case "L": PourcentCorrection = 7; break;
-                    case "M": PourcentCorrection = 15; break;
-                    case "Q": PourcentCorrection = 25; break;
-                    case "H": PourcentCorrection = 30; break;
-                }
-
                 //Reset l'image à incorporer
-                imageAIncorporer = null;
-                saveFilenameAIncorporer = "";
+                saveSKBitmap = null;
+                pourcentCorrection = 0;
 
                 // Récupérer la taille de bordure
                 int imagesize = 0;
 
                 // Générer le QR Code et l'afficher
-                qrDrawable = CLSGenereQRCode.GenereImageQRCode(texte, correctionLevel, tailleBordure, ref imagesize, PourcentCorrection);
+                qrDrawable = clsGraphicsQRCode.GenereImageQRCode(texte, correctionLevel, tailleBordure, ref imagesize, ref pourcentCorrection);
                 if (qrDrawable == null)
                 {
                     await DisplayAlert("Génération du QR Code", "La chaine à générer est trop longue pour la capacité d'un QR Code. Essayez de réduire le niveau de correction", "OK");
@@ -148,18 +157,11 @@ namespace QRDessFree
 
             }
 
-            catch (Exception ex)
-
-            {
-
-                // Gestion de l'erreur : journaliser, afficher, etc.
-
-                await DisplayAlert("Exception", ex.Message  + "\n Votre appli a rencontré un problème, veuillez contacter le développeur", "OK");
-
-
+            catch (Exception ex) {
+                // Affichage message d'erreur
+                await DisplayAlert("Exception", "Votre application QR Dess Free a rencontré un problème, veuillez contacter le développeur en lui communiquant le message ci-dessous :\n\n"
+                   + $"{ex}", "OK");
             }
-
-            
         }
 
         /// <summary>On enregistre l'image dans un fichier</summary>
@@ -167,13 +169,13 @@ namespace QRDessFree
         /// <param name="width">largeur de l'image</param>
         /// <param name="height">Hauter de l'image</param>
         /// <returns>Le nom du fichier</returns>
-        private async Task<string> SauvegarderQrCodeAsync(IDrawable drawable, int width, int height)
+        private async Task<string> SauvegarderQrCodeAsync(int width, int height)
         {
             // Récupérer le drawable dans une variable
             var ddrawable = qrCodeView.Drawable;
             string filePath = Path.Combine(FileSystem.CacheDirectory, "QRCode"+ DateTime.Now.ToString("yyyy-MM-dd_HH-mm-ss")+".jpg");
 
-            CLSGenereQRCode.SaveDrawingToJpg(filePath, (int) qrCodeView.Width, (int)qrCodeView.Height, saveFilenameAIncorporer, tailleBordure,PourcentCorrection);
+            clsGraphicsQRCode.SaveDrawingToJpg(filePath, (int) qrCodeView.Width, (int)qrCodeView.Height, tailleBordure,pourcentCorrection, saveSKBitmap);
 
             return filePath;
         }
@@ -188,7 +190,7 @@ namespace QRDessFree
             {
                 if (qrCodeView.Drawable != null)
                 {
-                    var path = await SauvegarderQrCodeAsync(qrCodeView.Drawable, (int)qrCodeView.WidthRequest, (int)qrCodeView.HeightRequest);
+                    var path = await SauvegarderQrCodeAsync((int)qrCodeView.WidthRequest, (int)qrCodeView.HeightRequest);
                     await Share.Default.RequestAsync(new ShareFileRequest
                     {
                         Title = "Partager le QR Code",
@@ -198,36 +200,29 @@ namespace QRDessFree
             }
 
             catch (Exception ex)
-
             {
-
-                // Gestion de l'erreur : journaliser, afficher, etc.
-
-                await DisplayAlert("Exception", ex.Message + "\n Votre appli a rencontré un problème, veuillez contacter le développeur", "OK");
-
-
+                // Affichage message d'erreur
+                await DisplayAlert("Exception", "Votre application QR Dess Free a rencontré un problème, veuillez contacter le développeur en lui communiquant le message ci-dessous :\n\n"
+                   + $"{ex}", "OK");
             }
-
-           
         }
 
 
-       /// <summary>Affichage du texte d'aide</summary>
-       /// <param name="sender"></param>
-       /// <param name="e"></param>
+        /// <summary>Affichage du texte d'aide</summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
         private async void OnHelpClicked(object sender, EventArgs e)
         {
             string titre = "Aide - QR Dess Free";
             string message = "• Saisir le texte à encoder.\n" +
                              "• Sélectionner le niveau de correction.\n" +
                              "• Générer le qrCode.\n" +
+                             "• Incorporer une image au centre en cliquant sur le QR Code (optionnel).\n" +
                              "• Partager.";
             string bouton = "OK";
 
             await DisplayAlert(titre, message, bouton);
         }
-
-
  
     }
 

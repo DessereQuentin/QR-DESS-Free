@@ -138,44 +138,13 @@ namespace QRDessFree
         /// <summary>Table des puissances de 2</summary>
         public static int[] PowerOf2;
 
-        /// <summary>Génération de l'image du QRCode</summary>
-        /// <param name="Texte">Texte à intégrer dans le QRCode</param>
-        /// <param name="Correction">Type de correction à appliquer</param>
-        /// <param name="TailleBordure">Taille du bord blanc du QRCode en multiple de la taille d'un module</param>
-        /// <returns>Renvoie l'image du QRCode sous forme de BitMap</returns>
-//        public static QRCodeDrawable GenereImageQRCode(string Texte, string Correction, int TailleBordure, ref int ImageSize)
-        public static ImageDrawable GenereImageQRCode(string Texte, string Correction, int TailleBordure, ref int ImageSize, int pourcentCorrection)
-        {
-            // Initialisation des tables de travail
-            CLSGenereQRCode.InitTables();
-            // Génération du tableau de bytes du QRCode
-            bool bOK=true;
-            ModulesQRCode = CLSGenereQRCode.GenereQRCode(Texte, Correction, ref bOK);
-            if (bOK != true)   return null;
-            
-            // Récupération de la largeur de l'écran pour adapter la résolution du QR Code
-            var largeurDip = DeviceDisplay.MainDisplayInfo.Width / DeviceDisplay.MainDisplayInfo.Density;
-            int TailleQrCode = (ModulesQRCode.GetLength(0) + 2 * TailleBordure);
-            iPas = (int)largeurDip / TailleQrCode;
-
-            // la résolustion maximum est 7
-            if (iPas > 7) iPas = 7;
-
-            // La résolution minimum est 2
-            if (iPas < 2) iPas = 2; // afficher un message pour suggérer de dimunuer la correction si elle n'est pas au minimum
-            ImageSize = TailleQrCode*iPas;
-            return new ImageDrawable(null, pourcentCorrection, ModulesQRCode,  TailleBordure);
-
-            //return new QRCodeDrawable(ModulesQRCode, TailleBordure);
-        }
-
-
         /// <summary>Génération de la matrice des modules du QRCode</summary>
         /// <param name="Texte">Texte à intégrer dans le QRCode</param>
         /// <param name="Correction">Type de correction à appliquer</param>
         /// <param name="bOK">Indique si la génération s'est bien passée</param>
+        /// <param name="nbBitsCorrection">Pourcentage de bits de correction</param>
         /// <returns>Renvoie les bits dans un tableau de byte (un byte par bit ayant la valeur 0 ou 1)</returns>
-        public static byte[,] GenereQRCode(string Texte, string Correction, ref bool bOK)
+        public static byte[,] GenereQRCode(string Texte, string Correction, ref bool bOK, ref int nbBitsCorrection)
         {
 
             ModeEnum nm =DetermineMode(Texte);
@@ -220,7 +189,7 @@ namespace QRDessFree
 
             byte[] DataCodewords = CLSGenereQRCode.GenereDataCodewords(s);
             GroupBlockStruct[] QRCodeDataAndCorrections= null;
-            byte[] CorrectionCodeWords = CLSGenereQRCode.GenereLitAllCodewords(ref DataCodewords, Version, ref QRCodeDataAndCorrections);
+            byte[] CorrectionCodeWords = CLSGenereQRCode.GenereLitAllCodewords(ref DataCodewords, Version, ref QRCodeDataAndCorrections, ref nbBitsCorrection);
 
             /* string ss = ConvertBytesString(CorrectionCodeWords);  ---- pour test ----*/ 
 
@@ -646,9 +615,6 @@ namespace QRDessFree
                    (value >= 0xE040 && value <= 0xEBBF);
         }
 
-
-
-
         /// <summary>Génération à partir d'un texte Kanji de la chaine binaire représentant la partie data du QRCode</summary>
         /// <param name="Texte">Texte numérique à intégrer dans le QRCode</param>
         /// <param name="Correction">Type de correction à appliquer</param>
@@ -862,7 +828,7 @@ namespace QRDessFree
         /// <param name="Version">Indice de la version du QRCode dans la table des versions</param>
         /// <param name="Lecture">Indique si les données sont à ecrire dans le QRCode ou à lire</param>
         /// <returns>Table complète des bits du QRCode (complété avec les bits à zéro restant=Remainder Bits)</returns>
-        public static byte[] GenereLitAllCodewords(ref byte[] Datawords, int Version, ref GroupBlockStruct[] QRCodeDataAndCorrections, bool Lecture = false)
+        public static byte[] GenereLitAllCodewords(ref byte[] Datawords, int Version, ref GroupBlockStruct[] QRCodeDataAndCorrections, ref int nbBitsCorrection, bool Lecture = false)
         {
             int[] iSizeGroup ={ tbVersion[Version].NBBlocksGroup1, tbVersion[Version].NBBlocksGroup2 };
             int[] iSizeBlocksGroup = { tbVersion[Version].DataCodewordsInEachBlocksGroup1, tbVersion[Version].DataCodewordsInEachBlocksGroup2 };
@@ -876,8 +842,13 @@ namespace QRDessFree
             for (i = 0; i < 2; i++)
             {   QRCodeDataAndCorrections[i].Group = new DataBlockStruct[iSizeGroup[i]];
                 for (j = 0; j < iSizeGroup[i]; j++)
-                {   QRCodeDataAndCorrections[i].Group[j].DataCodewords = new byte[iSizeBlocksGroup[i]];
+                {   
+                    // On comptabilise les bits de correction
+                    nbBitsCorrection+= ECCodeWords * 8;
+                    // On initialise les blocs de données et de correction du groupe
+                    QRCodeDataAndCorrections[i].Group[j].DataCodewords = new byte[iSizeBlocksGroup[i]];
                     QRCodeDataAndCorrections[i].Group[j].ECCodewords = new byte[ECCodeWords];
+                    
                     /// On initialise la table des Codewords du bloc du groupe en écriture
                     if (!Lecture) {
                         for (k=0; k < iSizeBlocksGroup[i]; k++)
@@ -1099,450 +1070,6 @@ namespace QRDessFree
             return FormatSave;
         }
 
-        /// <summary>Regénère le QRCode dans un canvas en fusionnant l'image le cas échéant et l'enregistre dans un fichier jpeg pour le partager</summary>
-        /// <param name="filePath">Fichier dans lequel enregistrer le QRCode</param>
-        /// <param name="width">Largeur du QRCode</param>
-        /// <param name="height">Hauteur du QRCode</param>
-        /// <param name="tailleBordure">Taille de la bordure à tracer (en multiple de la taille d'un pixel du QRCode)</param>
-        /// <param name="pourcentCorrection">Pourcentage de correction fonction du niveau de correction (permet de savoir quelle surface accorder à l'image à incoprorer)</param>
-        public static async void SaveDrawingToJpg(string filePath, int width, int height, string FilePathsourceImage, int tailleBordure, int pourcentCorrection)
-        {
-
-            // On supprime le fichier temporaire s'il existe déjà
-            CLSGenereQRCode.SupprimerAnciensFichiersQRCode("QRCode*.jpg");
- 
-            // on crée un canvas pour le tracé
-            using var bitmap = new SKBitmap(width, height);
-            using var canvas = new SKCanvas(bitmap);
-
-            // On trace le QRCode en le fusionnant avec l'image
-            drawQRCode(canvas, width, height, FilePathsourceImage, tailleBordure, pourcentCorrection);
-
-            // On enregistre le QRCode dans un fichier jpeg
-            using var image = SKImage.FromBitmap(bitmap);
-            using var data = image.Encode(SKEncodedImageFormat.Jpeg,100);
-            using var stream = File.OpenWrite(filePath);
-            data.SaveTo(stream);
-        }
-
-        /// <summary>Dessine le QRCode et le cas échéant l'image à incoprorer</summary>
-        /// <param name="canvas">ICanvas conteneur du QRCode</param>
-        /// <param name="width">Largeur du QRCode</param>
-        /// <param name="height">Hauteur du QRCode</param>
-        /// <param name="tailleBordure">Taille de la bordure à tracer (en multiple de la taille d'un pixel du QRCode)</param>
-        /// <param name="pourcentCorrection">Pourcentage de correction fonction du niveau de correction (permet de savoir quelle surface accorder à l'image à incoprorer)</param>
-        public static void drawQRCode(ICanvas canvas, float width, float height, Microsoft.Maui.Graphics.IImage sourceImage, int tailleBordure, int pourcentCorrection)
-        {
-            // Dessiner l'image de fond en utilisant la même méthode que pour l'image de qrCodeView
-            int size = ModulesQRCode.GetLength(0);
-            int iEntourage = tailleBordure * iPas;
-
-            // Fond blanc
-            canvas.FillColor = Colors.White;
-            canvas.FillRectangle(0,0,width,height);
-
-            // Dessiner chaque module du QR Code
-            canvas.FillColor = Colors.Black;
-            for (int i = 0; i < size; i++)
-            {
-                for (int j = 0; j < size; j++)
-                {
-                    if (ModulesQRCode[i, j] == 1)
-                    {
-                        float x1 = iEntourage + i * iPas;
-                        float y1 = iEntourage + j * iPas;
-                        canvas.FillRectangle(x1, y1, iPas, iPas);
-                    }
-                }
-            }
-
-            if (sourceImage != null)
-            {
-                // Coefficient de division de l'image pour l'adapter à la taille du QR Code
-                double surface = (double)width * height * (Double)pourcentCorrection / 200.0;
-                double divImage = Math.Sqrt(surface / (sourceImage.Width * sourceImage.Height));
-
-                // Taille réduite de l'image
-                double scaledWidth = (double)sourceImage.Width * divImage;
-                double scaledHeight = (double)sourceImage.Height * divImage;
-
-                //Position de l'image
-                double x = (double)(width / 2 - scaledWidth / 2);
-                double y = (double)(height / 2 - scaledHeight / 2);
-
-                canvas.DrawImage(sourceImage, (int)x, (int)y, (float)scaledWidth, (float)scaledHeight);
-            }
-
-        }
-
-        /// <summary>Dessine le QRCode et le cas échéant l'image à incoprorer</summary>
-        /// <param name="canvas">Canvas conteneur du QRCode</param>
-        /// <param name="width">Largeur du QRCode</param>
-        /// <param name="height">Hauteur du QRCode</param>
-        /// <param name="FilePathImageAIncorporer">Nom du fichier de l'image à incoporer</param>
-        /// <param name="tailleBordure">Taille de la bordure à tracer (en multiple de la taille d'un pixel du QRCode)</param>
-        /// <param name="pourcentCorrection">Pourcentage de correction fonction du niveau de correction (permet de savoir quelle surface accorder à l'image à incoprorer)</param>
-        public static void drawQRCode(SKCanvas canvas, float width, float height, string FilePathImageAIncorporer, int tailleBordure, int pourcentCorrection)
-        {
-
-            // Variables d'entrée (à adapter selon ton contexte)
-            int size = ModulesQRCode.GetLength(0);
-            int iEntourage = tailleBordure * iPas;
-
-            // Crée un SKPaint blanc pour le fond
-            var paintFond = new SKPaint
-            {
-                Style = SKPaintStyle.Fill,
-                Color = SKColors.White
-            };
-
-            // Remplir le fond blanc
-            canvas.DrawRect(0, 0, width, height, paintFond);
-
-            // Préparer le pinceau noir pour les modules
-            var paintNoir = new SKPaint
-            {
-                Style = SKPaintStyle.Fill,
-                Color = SKColors.Black
-            };
-
-            // Dessiner chaque module du QR Code
-            for (int i = 0; i < size; i++)
-            {
-                for (int j = 0; j < size; j++)
-                {
-                    if (ModulesQRCode[i, j] == 1)
-                    {
-                        float x1 = iEntourage + i * iPas;
-                        float y1 = iEntourage + j * iPas;
-                        canvas.DrawRect(x1, y1, iPas, iPas, paintNoir);
-                    }
-                }
-            }
-
-            // Si le fichier est défini et existe, on l'incorpore dans le QR Code
-            if (FilePathImageAIncorporer !="" && File.Exists(FilePathImageAIncorporer))
-            {
-
-                // Dessiner l'image au centre si elle existe
-                //Lecture du fichier sourceImage
-                using Stream stream = File.OpenRead(FilePathImageAIncorporer); 
-                SKBitmap sourceImage= SKBitmap.Decode(stream);
-
-                /*
-                // Calcul de la position et de la taille de l'image cible
-                double surface = (double)width * height * (double)pourcentCorrection / 200.0;
-                double divImage = Math.Sqrt(surface / (sourceImage.Width * sourceImage.Height));
-
-                double scaledWidth = sourceImage.Width * divImage;
-                double scaledHeight = sourceImage.Height * divImage;
-
-                double x = width / 2.0 - scaledWidth / 2.0;
-                double y = height / 2.0 - scaledHeight / 2.0;
-
-                var destRect = new SKRect((float)x, (float)y, (float)(x + scaledWidth), (float)(y + scaledHeight)); 
-                
-                // On dessine l'image à incorporer dans le QR Code
-                canvas.DrawBitmap(sourceImage, destRect);
-                */
-
-                // On dessine l'image à incorporer dans le QR Code
-                canvas.DrawBitmap(sourceImage, destRect((int)width, (int)height, sourceImage, pourcentCorrection));
-
-            }
-
-        }
-
-        public static SKRect destRect (int width, int height, SKBitmap sourceImage, int pourcentCorrection)
-        {
-            // Calcul de la position et de la taille de l'image cible
-            double surface = (double)width * height * (double)pourcentCorrection / 200.0;
-            double divImage = Math.Sqrt(surface / (sourceImage.Width * sourceImage.Height));
-
-            double scaledWidth = sourceImage.Width * divImage;
-            double scaledHeight = sourceImage.Height * divImage;
-
-            double x = width / 2.0 - scaledWidth / 2.0;
-            double y = height / 2.0 - scaledHeight / 2.0;
-
-            var Rect = new SKRect((float)x, (float)y, (float)(x + scaledWidth), (float)(y + scaledHeight));
-            return Rect;
-
-        }
-
-        public class ImageDrawable : IDrawable
-        {
-            private Microsoft.Maui.Graphics.IImage _sourceImage;
-            private int _pourcentCorrection, _tailleBordure;
-            private byte[,] _modulesQRCode;
-
-            public ImageDrawable(Microsoft.Maui.Graphics.IImage sourceImage,  int pourcentCorrection, byte[,] modulesQRCode, int tailleBordure)
-            {
-                _sourceImage = sourceImage;
-                _pourcentCorrection = pourcentCorrection;
-                _modulesQRCode = modulesQRCode;
-                _tailleBordure = tailleBordure;
-            }
-
-            public void Draw(ICanvas canvas, RectF dirtyRect)
-            {
-
-                CLSGenereQRCode.drawQRCode(canvas, dirtyRect.Width, dirtyRect.Height,_sourceImage,_tailleBordure,_pourcentCorrection);
-           }
-        }
-
-
-        public static void SupprimerAnciensFichiersQRCode(string protofilename)
-        {
-            string cachePath = Microsoft.Maui.Storage.FileSystem.CacheDirectory;
-
-            // Récupère tous les fichiers du cache dont le nom commence par "qr" et finit par ".png"
-            var fichiersQRCode = Directory.GetFiles(cachePath, protofilename);
-
-            foreach (var fichier in fichiersQRCode)
-            {
-                try
-                {
-                    File.Delete(fichier);
-                }
-                catch (Exception ex)
-                {
-                }
-            }
-        }
-/// <summary>Détourage de l'image remplace les pixels proches du blanc ou transparent par des pixels transparents Jusqu'à rencontrer des pixels ne répondant pas à cette condition</summary>
-/// <param name="inputBitmap">Image à traitée</param>
-/// <remarks>On inclut les pixels transparent dans l'algorithme même s'il n'y a pas besoin de les remplacer pour assurer la continuité du détourage</remarks>
-/// <returns>Renvoie l'image transformée</returns>
-        public static SKBitmap RemoveWhiteBorder(SKBitmap inputBitmap)
-        {
-            int width = inputBitmap.Width;
-            int height = inputBitmap.Height;
-            
-            // Création de l'image cible
-            var output = new SKBitmap(width, height, true);
-
-            // Copie des pixels
-            inputBitmap.CopyTo(output);
-
-            bool[,] visited = new bool[width, height];
-            Queue<(int x, int y)> queue = new();
-
-            // Condition de détourage
-            bool IsWhiteOrTansparent(SKColor color) => (color.Red >= 250 && color.Green >= 250 && color.Blue >= 250) || color.Alpha == 0; ;
-            //bool IsWhite(SKColor color) => color.Red >= 250 && color.Green >= 250 && color.Blue >= 250 ;
-
-            void TryEnqueue(int x, int y)
-            {
-                if (x < 0 || y < 0 || x >= width || y >= height || visited[x, y])  return;
-
-                SKColor color = output.GetPixel(x, y);
-                if (IsWhiteOrTansparent(color))
-                {
-                    queue.Enqueue((x, y));
-                    visited[x, y] = true;
-                }
-            }
-
-            // Enqueue les bords
-            for (int x = 0; x < width; x++)
-            {
-                TryEnqueue(x, 0);
-                TryEnqueue(x, height - 1);
-            }
-
-            for (int y = 0; y < height; y++)
-            {
-                TryEnqueue(0, y);
-                TryEnqueue(width - 1, y);
-            }
-
-            // BFS flood fill
-            while (queue.Count > 0)
-            {
-                var (x, y) = queue.Dequeue();
-                var color = output.GetPixel(x, y);
-                output.SetPixel(x, y, new SKColor(color.Red, color.Green, color.Blue, 0)); // transparent
-
-                TryEnqueue(x + 1, y);
-                TryEnqueue(x - 1, y);
-                TryEnqueue(x, y + 1);
-                TryEnqueue(x, y - 1);
-            }
-
-            return output;
-        }
-
-        public static SKBitmap AddWhiteOutline(SKBitmap input, int outlineThickness)
-        {
-            int width = input.Width;
-            int height = input.Height;
-
-            var mask = new SKBitmap(width, height, SKColorType.Alpha8, SKAlphaType.Premul);
-
-            // Étape 1 : créer un masque alpha (1 = visage, 0 = fond)
-            for (int y = 0; y < height; y++)
-            {
-                for (int x = 0; x < width; x++)
-                {
-                    byte alpha = input.GetPixel(x, y).Alpha;
-                    mask.SetPixel(x, y, new SKColor(0, 0, 0, alpha > 0 ? (byte)255 : (byte)0));
-                }
-            }
-
-            // Étape 2 : dilater le masque (agrandir le contour)
-            var outline = new SKBitmap(width, height, SKColorType.Alpha8, SKAlphaType.Premul);
-
-            using (var canvas = new SKCanvas(outline))
-            {
-                var paint = new SKPaint
-                {
-                    ImageFilter = SKImageFilter.CreateDilate(outlineThickness, outlineThickness),
-                    BlendMode = SKBlendMode.Src
-                };
-                canvas.DrawBitmap(mask, 0, 0, paint);
-            }
-
-            // Étape 3 : enlever l'intérieur du masque (on ne veut que le contour)
-            var outlineOnly = new SKBitmap(width, height, SKColorType.Alpha8, SKAlphaType.Premul);
-
-            for (int y = 0; y < height; y++)
-            {
-                for (int x = 0; x < width; x++)
-                {
-                    byte dilated = outline.GetPixel(x, y).Alpha;
-                    byte original = mask.GetPixel(x, y).Alpha;
-                    byte bresult = (byte)(dilated > 0 && original == 0 ? 255 : 0);
-                    outlineOnly.SetPixel(x, y, new SKColor(0, 0, 0, bresult));
-                }
-            }
-
-            // Étape 4 : créer un nouveau bitmap avec le fond transparent + contour blanc + image
-            var result = new SKBitmap(width, height, SKColorType.Bgra8888, SKAlphaType.Premul);
-            using (var canvas = new SKCanvas(result))
-            {
-                canvas.Clear(SKColors.Transparent);
-
-                // Dessine le contour blanc
-                using var outlinePaint = new SKPaint
-                {
-                    Color = SKColors.White,
-                    BlendMode = SKBlendMode.SrcOver
-                };
-                canvas.DrawBitmap(outlineOnly, 0, 0, outlinePaint);
-
-                // Dessine l’image d’origine
-                canvas.DrawBitmap(input, 0, 0);
-            }
-
-            return result;
-        }
-
-        /// <summary>Réduit la taille de l'image à sa taille cible dans le QR Code</summary>
-        /// <param name="input"></param>
-        /// <param name="width"></param>
-        /// <param name="height"></param>
-        /// <param name="pourcentCorrection"></param>
-        /// <returns></returns>
-        public static SKBitmap ReduitImage(SKBitmap input, int width, int height, int pourcentCorrection)
-        {
-            // On calcule la taille de l'image cible en fonction du pourcentage des bits de correction du QRCode
-            var Rect = destRect(width, height, input, pourcentCorrection);
-
-            // On teste la validité de l'image cible
-            if (input == null || Rect.Width < 2 || Rect.Height < 2)
-                throw new ArgumentException("Le bitmap d'origine est invalide ou trop petit.");
-
-            // Nouvelle taille avec même format que l'original (y compris alpha)
-            var resizedInfo = new SKImageInfo((int)Rect.Width, (int)Rect.Height, input.ColorType, input.AlphaType);
-
-            // Resize avec haute qualité
-            SKBitmap resizedBitmap = input.Resize(resizedInfo, SKSamplingOptions.Default);
-
-            if (resizedBitmap == null)
-                throw new Exception("Échec du redimensionnement de l'image.");
-
-            return resizedBitmap;
-
-        }
-
-        public static SKBitmap AddTransparentBorder(SKBitmap input, int borderSize)
-        {
-            int width = input.Width;
-            int height = input.Height;
-
-            // Déterminer les limites du contenu visible (non transparent)
-            int minX = width, minY = height, maxX = 0, maxY = 0;
-            for (int y = 0; y < height; y++)
-            {
-                for (int x = 0; x < width; x++)
-                {
-                    var pixel = input.GetPixel(x, y);
-                    if (pixel.Alpha > 0)
-                    {
-                        if (x < minX) minX = x;
-                        if (x > maxX) maxX = x;
-                        if (y < minY) minY = y;
-                        if (y > maxY) maxY = y;
-                    }
-                }
-            }
-
-            if (minX >= maxX || minY >= maxY)
-                return input; // rien de visible, on retourne l’image telle quelle
-
-            int croppedWidth = maxX - minX + 1;
-            int croppedHeight = maxY - minY + 1;
-
-            using var cropped = new SKBitmap(croppedWidth, croppedHeight, true);
-            using (var canvas = new SKCanvas(cropped))
-            {
-                var srcRect = new SKRectI(minX, minY, maxX + 1, maxY + 1);
-                var destRect = new SKRectI(0, 0, croppedWidth, croppedHeight);
-                canvas.DrawBitmap(input, srcRect, destRect);
-            }
-
-            int newWidth = croppedWidth + 2 * borderSize;
-            int newHeight = croppedHeight + 2 * borderSize;
-            var output = new SKBitmap(newWidth, newHeight);
-
-            using (var canvas = new SKCanvas(output))
-            {
-                // fond blanc transparent
-                canvas.Clear(new SKColor(255, 255, 255, 0));
-
-                // dessine l'image centrée
-                canvas.DrawBitmap(cropped, borderSize, borderSize);
-            }
-
-            return output;
-        }
-
-        public static void SaveBitmap(SKBitmap bitmap, string path)
-        {
-            using var image = SKImage.FromBitmap(bitmap);
-            using var data = image.Encode(SKEncodedImageFormat.Png, 100);
-            using var stream = File.OpenWrite(path);
-            data.SaveTo(stream);
-        }
-
-        public static SKBitmap LoadBitmap(string path)
-        {
-            using var stream = File.OpenRead(path);
-            return SKBitmap.Decode(stream);
-        }
-
-       /// <summary>Converti un SKBitmap en IImage</summary>
-       /// <param name="bitmap">Bitmap à convertir</param>
-       /// <returns>Renvoie le bitmap sous forme de IImage</returns>
-        public static Microsoft.Maui.Graphics.IImage ConvertSKBitmapToMauiImage(SKBitmap bitmap)
-        {
-            using var image = SKImage.FromBitmap(bitmap);
-            using var data = image.Encode(SKEncodedImageFormat.Png, 100);
-            using var stream = new MemoryStream(data.ToArray());
-
-            return PlatformImage.FromStream(stream);
-        }
         public static string Hello_World1Q = "00100000010110110000101101111000110100010111001011011100010011010100001101000000111011000001000111101100";
 
         public static string Exemple5MIn = "0100001101010101010001101000011001010111001001100101010111000010"+
