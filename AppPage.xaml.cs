@@ -36,6 +36,7 @@ namespace QRDessFree
         /// <returns>O si aucune image choisie, 1 sinon</returns>
         private async Task<int> IncorporeImage()
         {
+
             // L'utilisateur choisit une image
             var result = await FilePicker.Default.PickAsync(new PickOptions
             {
@@ -44,14 +45,33 @@ namespace QRDessFree
             });
 
             // S'il n'a pas choisi d'image, on ne fait rien
-            if (result == null) return 0;
+            if (result == null) return 0; 
+
 
             // On sauve le nom du fichier pour pouvoir le réouvrir ultérieuremnt lors du partage
-            saveFilenameAIncorporer = result.FullPath;
+            string filenameImage = result.FullPath;
+   
+            // Etape 0 on lit l'image 
+            using var input = CLSGenereQRCode.LoadBitmap(filenameImage);
 
-            //On ouvre le fichier
-            using var stream = await result.OpenReadAsync();
-            imageAIncorporer = PlatformImage.FromStream(stream);
+            // Etape 1 : on réduit l'image à sa taille cible pour améliorer la performance du détourage 
+            using var imagereduite = CLSGenereQRCode.ReduitImage(input, (int)qrCodeView.Width, (int)qrCodeView.Height, PourcentCorrection);
+
+            // Étape 2 : suppression du fond 
+            using var transparent = CLSGenereQRCode.RemoveWhiteBorder(imagereduite);
+
+            // Étape 3 : ajout d'un cadre transparent au cas où certaine partie de l'image colle au cadre
+            using var withCadre = CLSGenereQRCode.AddTransparentBorder(transparent, 3);// iPas);
+
+            // Étape 4 : on ajoute d'une bordure blanche autour du visage
+            using var withBorder = CLSGenereQRCode.AddWhiteOutline(withCadre, 3);// withCadre, iPas);
+
+            // Etape 5 : on enregistre le résultat dans le cache
+            string cachePath = Microsoft.Maui.Storage.FileSystem.CacheDirectory;
+            saveFilenameAIncorporer = cachePath + "QRCode_ImageDetouree.png";
+            CLSGenereQRCode.SaveBitmap(withBorder, saveFilenameAIncorporer );
+
+            imageAIncorporer = ConvertSKBitmapToMauiImage(withBorder);
 
             // On affecte le résultat fusionné à la vue graphique
             qrDrawable = new ImageDrawable(imageAIncorporer, PourcentCorrection, ModulesQRCode, tailleBordure);
@@ -64,21 +84,30 @@ namespace QRDessFree
         /// <summary>Permet d'incoporer une image au QRCode</summary>
         private async void OnIncorporeClicked(object sender, EventArgs e)
         {
-           
-
-           
-            if (qrCodeView.Drawable == null)
+            try
             {
-                await DisplayAlert("Incorporation d'image", "Veuillez d'abord générer un QR Code.", "OK");
-                return;
+
+                if (qrCodeView.Drawable == null)
+                {
+                    await DisplayAlert("Incorporation d'image", "Veuillez d'abord générer un QR Code.", "OK");
+                    return;
+                }
+                int retour = await IncorporeImage();
             }
-            int retour = await IncorporeImage();
- 
+            catch (Exception ex)
+            {
+                // Gestion de l'erreur : journaliser, afficher, etc.
+                await DisplayAlert("Exception", ex.Message + "\r\n" + $"Erreur : {ex}", "OK");
+
+            }
+
         }
 
         /// <summary>Déclenche la génération du QRCode</summary>
         private async void  OnGenerateQRCodeClicked(object sender, EventArgs e)
         {
+
+
             // Récupérer le texte saisi
             string texte = txtInput.Text;
 
@@ -160,7 +189,6 @@ namespace QRDessFree
                 });
             }
         }
-
 
        /// <summary>Affichage du texte d'aide</summary>
        /// <param name="sender"></param>

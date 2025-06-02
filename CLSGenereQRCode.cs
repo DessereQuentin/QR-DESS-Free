@@ -1,8 +1,7 @@
-﻿using Microsoft.VisualBasic; // Install-Package Microsoft.VisualBasic
+﻿using Microsoft.Maui.Graphics.Platform;
+using Microsoft.VisualBasic; // Install-Package Microsoft.VisualBasic
 using SkiaSharp;
 using System.Text;
-using Microsoft.Maui.Storage;
-
 
 namespace QRDessFree
 {
@@ -651,8 +650,9 @@ namespace QRDessFree
 
 
         /// <summary>Génération à partir d'un texte Kanji de la chaine binaire représentant la partie data du QRCode</summary>
-        /// <param name="texte">Texte numérique à intégrer dans le QRCode</param>
-        /// <param name="sCorrection">Type de correction à appliquer</param>
+        /// <param name="Texte">Texte numérique à intégrer dans le QRCode</param>
+        /// <param name="Correction">Type de correction à appliquer</param>
+        /// <param name="Version">Version du QR Code (taille)</param>
         /// <returns>Renvoie la chaine binaire</returns>
         public static string GenereKanjiQRCode(string Texte, string Correction, ref int Version)
         {
@@ -1229,6 +1229,7 @@ namespace QRDessFree
                 using Stream stream = File.OpenRead(FilePathImageAIncorporer); 
                 SKBitmap sourceImage= SKBitmap.Decode(stream);
 
+                /*
                 // Calcul de la position et de la taille de l'image cible
                 double surface = (double)width * height * (double)pourcentCorrection / 200.0;
                 double divImage = Math.Sqrt(surface / (sourceImage.Width * sourceImage.Height));
@@ -1239,14 +1240,35 @@ namespace QRDessFree
                 double x = width / 2.0 - scaledWidth / 2.0;
                 double y = height / 2.0 - scaledHeight / 2.0;
 
-                var destRect = new SKRect((float)x, (float)y, (float)(x + scaledWidth), (float)(y + scaledHeight));
-
+                var destRect = new SKRect((float)x, (float)y, (float)(x + scaledWidth), (float)(y + scaledHeight)); 
+                
                 // On dessine l'image à incorporer dans le QR Code
                 canvas.DrawBitmap(sourceImage, destRect);
+                */
+
+                // On dessine l'image à incorporer dans le QR Code
+                canvas.DrawBitmap(sourceImage, destRect((int)width, (int)height, sourceImage, pourcentCorrection));
+
             }
 
         }
 
+        public static SKRect destRect (int width, int height, SKBitmap sourceImage, int pourcentCorrection)
+        {
+            // Calcul de la position et de la taille de l'image cible
+            double surface = (double)width * height * (double)pourcentCorrection / 200.0;
+            double divImage = Math.Sqrt(surface / (sourceImage.Width * sourceImage.Height));
+
+            double scaledWidth = sourceImage.Width * divImage;
+            double scaledHeight = sourceImage.Height * divImage;
+
+            double x = width / 2.0 - scaledWidth / 2.0;
+            double y = height / 2.0 - scaledHeight / 2.0;
+
+            var Rect = new SKRect((float)x, (float)y, (float)(x + scaledWidth), (float)(y + scaledHeight));
+            return Rect;
+
+        }
 
         public class ImageDrawable : IDrawable
         {
@@ -1288,8 +1310,239 @@ namespace QRDessFree
                 }
             }
         }
+/// <summary>Détourage de l'image remplace les pixels proches du blanc ou transparent par des pixels transparents Jusqu'à rencontrer des pixels ne répondant pas à cette condition</summary>
+/// <param name="inputBitmap">Image à traitée</param>
+/// <remarks>On inclut les pixels transparent dans l'algorithme même s'il n'y a pas besoin de les remplacer pour assurer la continuité du détourage</remarks>
+/// <returns>Renvoie l'image transformée</returns>
+        public static SKBitmap RemoveWhiteBorder(SKBitmap inputBitmap)
+        {
+            int width = inputBitmap.Width;
+            int height = inputBitmap.Height;
+            
+            // Création de l'image cible
+            var output = new SKBitmap(width, height, true);
 
+            // Copie des pixels
+            inputBitmap.CopyTo(output);
 
+            bool[,] visited = new bool[width, height];
+            Queue<(int x, int y)> queue = new();
+
+            // Condition de détourage
+            bool IsWhiteOrTansparent(SKColor color) => (color.Red >= 250 && color.Green >= 250 && color.Blue >= 250) || color.Alpha == 0; ;
+            //bool IsWhite(SKColor color) => color.Red >= 250 && color.Green >= 250 && color.Blue >= 250 ;
+
+            void TryEnqueue(int x, int y)
+            {
+                if (x < 0 || y < 0 || x >= width || y >= height || visited[x, y])  return;
+
+                SKColor color = output.GetPixel(x, y);
+                if (IsWhiteOrTansparent(color))
+                {
+                    queue.Enqueue((x, y));
+                    visited[x, y] = true;
+                }
+            }
+
+            // Enqueue les bords
+            for (int x = 0; x < width; x++)
+            {
+                TryEnqueue(x, 0);
+                TryEnqueue(x, height - 1);
+            }
+
+            for (int y = 0; y < height; y++)
+            {
+                TryEnqueue(0, y);
+                TryEnqueue(width - 1, y);
+            }
+
+            // BFS flood fill
+            while (queue.Count > 0)
+            {
+                var (x, y) = queue.Dequeue();
+                var color = output.GetPixel(x, y);
+                output.SetPixel(x, y, new SKColor(color.Red, color.Green, color.Blue, 0)); // transparent
+
+                TryEnqueue(x + 1, y);
+                TryEnqueue(x - 1, y);
+                TryEnqueue(x, y + 1);
+                TryEnqueue(x, y - 1);
+            }
+
+            return output;
+        }
+
+        public static SKBitmap AddWhiteOutline(SKBitmap input, int outlineThickness)
+        {
+            int width = input.Width;
+            int height = input.Height;
+
+            var mask = new SKBitmap(width, height, SKColorType.Alpha8, SKAlphaType.Premul);
+
+            // Étape 1 : créer un masque alpha (1 = visage, 0 = fond)
+            for (int y = 0; y < height; y++)
+            {
+                for (int x = 0; x < width; x++)
+                {
+                    byte alpha = input.GetPixel(x, y).Alpha;
+                    mask.SetPixel(x, y, new SKColor(0, 0, 0, alpha > 0 ? (byte)255 : (byte)0));
+                }
+            }
+
+            // Étape 2 : dilater le masque (agrandir le contour)
+            var outline = new SKBitmap(width, height, SKColorType.Alpha8, SKAlphaType.Premul);
+
+            using (var canvas = new SKCanvas(outline))
+            {
+                var paint = new SKPaint
+                {
+                    ImageFilter = SKImageFilter.CreateDilate(outlineThickness, outlineThickness),
+                    BlendMode = SKBlendMode.Src
+                };
+                canvas.DrawBitmap(mask, 0, 0, paint);
+            }
+
+            // Étape 3 : enlever l'intérieur du masque (on ne veut que le contour)
+            var outlineOnly = new SKBitmap(width, height, SKColorType.Alpha8, SKAlphaType.Premul);
+
+            for (int y = 0; y < height; y++)
+            {
+                for (int x = 0; x < width; x++)
+                {
+                    byte dilated = outline.GetPixel(x, y).Alpha;
+                    byte original = mask.GetPixel(x, y).Alpha;
+                    byte bresult = (byte)(dilated > 0 && original == 0 ? 255 : 0);
+                    outlineOnly.SetPixel(x, y, new SKColor(0, 0, 0, bresult));
+                }
+            }
+
+            // Étape 4 : créer un nouveau bitmap avec le fond transparent + contour blanc + image
+            var result = new SKBitmap(width, height, SKColorType.Bgra8888, SKAlphaType.Premul);
+            using (var canvas = new SKCanvas(result))
+            {
+                canvas.Clear(SKColors.Transparent);
+
+                // Dessine le contour blanc
+                using var outlinePaint = new SKPaint
+                {
+                    Color = SKColors.White,
+                    BlendMode = SKBlendMode.SrcOver
+                };
+                canvas.DrawBitmap(outlineOnly, 0, 0, outlinePaint);
+
+                // Dessine l’image d’origine
+                canvas.DrawBitmap(input, 0, 0);
+            }
+
+            return result;
+        }
+
+        /// <summary>Réduit la taille de l'image à sa taille cible dans le QR Code</summary>
+        /// <param name="input"></param>
+        /// <param name="width"></param>
+        /// <param name="height"></param>
+        /// <param name="pourcentCorrection"></param>
+        /// <returns></returns>
+        public static SKBitmap ReduitImage(SKBitmap input, int width, int height, int pourcentCorrection)
+        {
+            // On calcule la taille de l'image cible en fonction du pourcentage des bits de correction du QRCode
+            var Rect = destRect(width, height, input, pourcentCorrection);
+
+            // On teste la validité de l'image cible
+            if (input == null || Rect.Width < 2 || Rect.Height < 2)
+                throw new ArgumentException("Le bitmap d'origine est invalide ou trop petit.");
+
+            // Nouvelle taille avec même format que l'original (y compris alpha)
+            var resizedInfo = new SKImageInfo((int)Rect.Width, (int)Rect.Height, input.ColorType, input.AlphaType);
+
+            // Resize avec haute qualité
+            SKBitmap resizedBitmap = input.Resize(resizedInfo, SKSamplingOptions.Default);
+
+            if (resizedBitmap == null)
+                throw new Exception("Échec du redimensionnement de l'image.");
+
+            return resizedBitmap;
+
+        }
+
+        public static SKBitmap AddTransparentBorder(SKBitmap input, int borderSize)
+        {
+            int width = input.Width;
+            int height = input.Height;
+
+            // Déterminer les limites du contenu visible (non transparent)
+            int minX = width, minY = height, maxX = 0, maxY = 0;
+            for (int y = 0; y < height; y++)
+            {
+                for (int x = 0; x < width; x++)
+                {
+                    var pixel = input.GetPixel(x, y);
+                    if (pixel.Alpha > 0)
+                    {
+                        if (x < minX) minX = x;
+                        if (x > maxX) maxX = x;
+                        if (y < minY) minY = y;
+                        if (y > maxY) maxY = y;
+                    }
+                }
+            }
+
+            if (minX >= maxX || minY >= maxY)
+                return input; // rien de visible, on retourne l’image telle quelle
+
+            int croppedWidth = maxX - minX + 1;
+            int croppedHeight = maxY - minY + 1;
+
+            using var cropped = new SKBitmap(croppedWidth, croppedHeight, true);
+            using (var canvas = new SKCanvas(cropped))
+            {
+                var srcRect = new SKRectI(minX, minY, maxX + 1, maxY + 1);
+                var destRect = new SKRectI(0, 0, croppedWidth, croppedHeight);
+                canvas.DrawBitmap(input, srcRect, destRect);
+            }
+
+            int newWidth = croppedWidth + 2 * borderSize;
+            int newHeight = croppedHeight + 2 * borderSize;
+            var output = new SKBitmap(newWidth, newHeight);
+
+            using (var canvas = new SKCanvas(output))
+            {
+                // fond blanc transparent
+                canvas.Clear(new SKColor(255, 255, 255, 0));
+
+                // dessine l'image centrée
+                canvas.DrawBitmap(cropped, borderSize, borderSize);
+            }
+
+            return output;
+        }
+
+        public static void SaveBitmap(SKBitmap bitmap, string path)
+        {
+            using var image = SKImage.FromBitmap(bitmap);
+            using var data = image.Encode(SKEncodedImageFormat.Png, 100);
+            using var stream = File.OpenWrite(path);
+            data.SaveTo(stream);
+        }
+
+        public static SKBitmap LoadBitmap(string path)
+        {
+            using var stream = File.OpenRead(path);
+            return SKBitmap.Decode(stream);
+        }
+
+       /// <summary>Converti un SKBitmap en IImage</summary>
+       /// <param name="bitmap">Bitmap à convertir</param>
+       /// <returns>Renvoie le bitmap sous forme de IImage</returns>
+        public static Microsoft.Maui.Graphics.IImage ConvertSKBitmapToMauiImage(SKBitmap bitmap)
+        {
+            using var image = SKImage.FromBitmap(bitmap);
+            using var data = image.Encode(SKEncodedImageFormat.Png, 100);
+            using var stream = new MemoryStream(data.ToArray());
+
+            return PlatformImage.FromStream(stream);
+        }
         public static string Hello_World1Q = "00100000010110110000101101111000110100010111001011011100010011010100001101000000111011000001000111101100";
 
         public static string Exemple5MIn = "0100001101010101010001101000011001010111001001100101010111000010"+

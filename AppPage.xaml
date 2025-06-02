@@ -16,7 +16,7 @@
 
         <!-- Texte à saisir -->
         <Label Text="Texte à encoder :" />
-        <Entry x:Name="txtInput" Placeholder="Entrez votre texte" />
+        <Entry x:Name="txtInput" Placeholder="Entrez votre texte"/>
 
         <!-- Niveau de correction -->
         <Label Text="Niveau de correction :" />
