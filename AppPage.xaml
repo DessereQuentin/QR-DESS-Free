@@ -37,14 +37,14 @@
 
                 <!-- Bouton Partager avec bordure -->
                 <Button
-    Clicked="OnShareQrCodeClicked"
-    HeightRequest="45"
-    WidthRequest="45"
-    BorderWidth="1"
-    BorderColor="Gray"
-    CornerRadius="8">
+                    Clicked="OnShareQrCodeClicked"
+                    HeightRequest="45"
+                    WidthRequest="45"
+                    BorderWidth="1"
+                    BorderColor="Gray"
+                    CornerRadius="8">
                     <Button.ImageSource>
-                       
+
                         <AppThemeBinding Light="share.png" Dark="sharedark.png" />
                     </Button.ImageSource>
                 </Button>

@@ -3,30 +3,64 @@
   "WorkspaceRootPath": "C:\\SaveQRDessFree\\QR-DESS-Free\\",
   "Documents": [
     {
+      "AbsoluteMoniker": "D:0:0:{98FEBAE6-7873-460D-870C-1DA2CE19743F}|QRDessFree.csproj|c:\\saveqrdessfree\\qr-dess-free\\clsgraphicsqrcode.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{98FEBAE6-7873-460D-870C-1DA2CE19743F}|QRDessFree.csproj|solutionrelative:clsgraphicsqrcode.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
       "AbsoluteMoniker": "D:0:0:{98FEBAE6-7873-460D-870C-1DA2CE19743F}|QRDessFree.csproj|c:\\saveqrdessfree\\qr-dess-free\\apppage.xaml.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
       "RelativeMoniker": "D:0:0:{98FEBAE6-7873-460D-870C-1DA2CE19743F}|QRDessFree.csproj|solutionrelative:apppage.xaml.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{98FEBAE6-7873-460D-870C-1DA2CE19743F}|QRDessFree.csproj|c:\\saveqrdessfree\\qr-dess-free\\clsgenereqrcode.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{98FEBAE6-7873-460D-870C-1DA2CE19743F}|QRDessFree.csproj|solutionrelative:clsgenereqrcode.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
     }
   ],
   "DocumentGroupContainers": [
     {
-      "Orientation": 1,
+      "Orientation": 0,
       "VerticalTabListWidth": 256,
       "DocumentGroups": [
         {
-          "DockedHeight": 197,
+          "DockedWidth": 200,
           "SelectedChildIndex": 0,
           "Children": [
             {
               "$type": "Document",
               "DocumentIndex": 0,
+              "Title": "clsGraphicsQRCode.cs",
+              "DocumentMoniker": "C:\\SaveQRDessFree\\QR-DESS-Free\\clsGraphicsQRCode.cs",
+              "RelativeDocumentMoniker": "clsGraphicsQRCode.cs",
+              "ToolTip": "C:\\SaveQRDessFree\\QR-DESS-Free\\clsGraphicsQRCode.cs",
+              "RelativeToolTip": "clsGraphicsQRCode.cs",
+              "ViewState": "AgIAAOkBAAAAAAAAAAAIwPwBAABEAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2025-06-02T21:03:08.139Z",
+              "EditorCaption": ""
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 2,
+              "Title": "clsGenereQRCode.cs",
+              "DocumentMoniker": "C:\\SaveQRDessFree\\QR-DESS-Free\\clsGenereQRCode.cs",
+              "RelativeDocumentMoniker": "clsGenereQRCode.cs",
+              "ToolTip": "C:\\SaveQRDessFree\\QR-DESS-Free\\clsGenereQRCode.cs",
+              "RelativeToolTip": "clsGenereQRCode.cs",
+              "ViewState": "AgIAAAAAAAAAAAAAAAAAAA4AAAAeAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2025-06-02T21:02:54.354Z",
+              "EditorCaption": ""
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 1,
               "Title": "AppPage.xaml.cs",
               "DocumentMoniker": "C:\\SaveQRDessFree\\QR-DESS-Free\\AppPage.xaml.cs",
               "RelativeDocumentMoniker": "AppPage.xaml.cs",
               "ToolTip": "C:\\SaveQRDessFree\\QR-DESS-Free\\AppPage.xaml.cs",
               "RelativeToolTip": "AppPage.xaml.cs",
-              "ViewState": "AgIAAEAAAAAAAAAAAAAywFAAAABBAAAAAAAAAA==",
+              "ViewState": "AgIAACMAAAAAAAAAAAAgwDoAAAAAAAAAAAAAAA==",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
-              "WhenOpened": "2025-06-02T18:43:41.176Z",
+              "WhenOpened": "2025-06-02T20:30:36.072Z",
               "EditorCaption": ""
             }
           ]

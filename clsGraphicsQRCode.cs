@@ -505,8 +505,8 @@ namespace QRDessFree
             int TailleQrCode = (CLSGenereQRCode.ModulesQRCode.GetLength(0) + 2 * TailleBordure);
             CLSGenereQRCode.iPas = (int)largeurDip / TailleQrCode;
 
-            // la résolustion maximum est 7
-            if (CLSGenereQRCode.iPas > 7) CLSGenereQRCode.iPas = 7;
+            // la résolution maximum est 10
+            if (CLSGenereQRCode.iPas >7) CLSGenereQRCode.iPas = 7;
 
             // La résolution minimum est 2
             if (CLSGenereQRCode.iPas < 2) CLSGenereQRCode.iPas = 2; // afficher un message pour suggérer de dimunuer la correction si elle n'est pas au minimum

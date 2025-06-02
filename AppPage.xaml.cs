@@ -48,9 +48,9 @@ namespace QRDessFree
             // Etape 1 : On conserve à l'image juste un cadre minimum de pixels blancs/transparents
             var withCadre = AddTransparentBorder(input, isPixelTransparent, tailleBordDetourage);
 
-            // Etape 2 : on réduit l'image à sa taille cible pour améliorer la performance du détourage 
+            // Etape 2 : on réduit l'image pour améliorer la performance du détourage 
             SKBitmap imageReduite;
-            if (withCadre.Width * withCadre.Height > 100000) imageReduite = ReduitImage(withCadre, qrCodeView.Width, qrCodeView.Height, 100000);
+            if (withCadre.Width * withCadre.Height > 200000) imageReduite = ReduitImage(withCadre, qrCodeView.Width, qrCodeView.Height, 200000);
             else imageReduite = withCadre;
 
             using (imageReduite)
@@ -109,6 +109,7 @@ namespace QRDessFree
             }
         }
 
+
         /// <summary>Déclenche la génération du QRCode</summary>
         private async void  OnGenerateQRCodeClicked(object sender, EventArgs e)
         {
@@ -165,15 +166,16 @@ namespace QRDessFree
         }
 
         /// <summary>On enregistre l'image dans un fichier</summary>
-        /// <param name="drawable">objet drawable contenant l'image</param>
         /// <param name="width">largeur de l'image</param>
         /// <param name="height">Hauter de l'image</param>
         /// <returns>Le nom du fichier</returns>
-        private async Task<string> SauvegarderQrCodeAsync(int width, int height)
+        private async Task<string> SauvegarderQrCodeAsync(int width, int height, bool bTelecharge)
         {
             // Récupérer le drawable dans une variable
             var ddrawable = qrCodeView.Drawable;
-            string filePath = Path.Combine(FileSystem.CacheDirectory, "QRCode"+ DateTime.Now.ToString("yyyy-MM-dd_HH-mm-ss")+".jpg");
+            string filePath;
+            if (bTelecharge) filePath = Path.Combine(FileSystem.AppDataDirectory, "QRCode" + DateTime.Now.ToString("yyyy-MM-dd_HH-mm-ss") + ".jpg");
+            else filePath = Path.Combine(FileSystem.CacheDirectory, "QRCode" + DateTime.Now.ToString("yyyy-MM-dd_HH-mm-ss") + ".jpg");
 
             clsGraphicsQRCode.SaveDrawingToJpg(filePath, (int) qrCodeView.Width, (int)qrCodeView.Height, tailleBordure,pourcentCorrection, saveSKBitmap);
 
@@ -190,13 +192,14 @@ namespace QRDessFree
             {
                 if (qrCodeView.Drawable != null)
                 {
-                    var path = await SauvegarderQrCodeAsync((int)qrCodeView.WidthRequest, (int)qrCodeView.HeightRequest);
+                    var path = await SauvegarderQrCodeAsync((int)qrCodeView.WidthRequest, (int)qrCodeView.HeightRequest, false);
                     await Share.Default.RequestAsync(new ShareFileRequest
                     {
                         Title = "Partager le QR Code",
                         File = new ShareFile(path)
                     });
                 }
+                else await DisplayAlert("Partage d'un QR Code", "Veuillez générer le QR Code", "OK");
             }
 
             catch (Exception ex)
@@ -206,7 +209,6 @@ namespace QRDessFree
                    + $"{ex}", "OK");
             }
         }
-
 
         /// <summary>Affichage du texte d'aide</summary>
         /// <param name="sender"></param>
