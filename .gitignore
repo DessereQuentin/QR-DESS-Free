@@ -74,13 +74,8 @@ secrets.json
 .idea/**
 
 # --- Optional: images/temp/cache ---
-*.png
-*.jpg
-*.jpeg
-*.gif
-*.bmp
-*.svg
-*.ico
-*.icns
 .cache/
 *.temp
+
+# --- données confidentielles ---
+AndroidKeyStore.Local.props

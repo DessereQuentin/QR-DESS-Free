@@ -1,6 +1,8 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk">
 
-	<PropertyGroup>
+  <Import Project="AndroidKeyStore.Local.props" Condition="Exists('AndroidKeyStore.Local.props')" />
+
+  <PropertyGroup>
 		<TargetFrameworks>net9.0-android;net9.0-ios;net9.0-maccatalyst</TargetFrameworks>
 		<TargetFrameworks Condition="$([MSBuild]::IsOSPlatform('windows'))">$(TargetFrameworks);net9.0-windows10.0.19041.0</TargetFrameworks>
 		<!-- Uncomment to also build the tizen app. You will need to install tizen by following this: https://github.com/Samsung/Tizen.NET -->
@@ -19,6 +21,17 @@
 		<SingleProject>true</SingleProject>
 		<ImplicitUsings>enable</ImplicitUsings>
 		<Nullable>enable</Nullable>
+
+    <!--AndroidKeyStore>true</AndroidKeyStore>
+    <AndroidSigningKeyStore>$(KEYSTORE_PATH)</AndroidSigningKeyStore>
+    <AndroidSigningStorePass>$(KEYSTORE_PASSWORD)</AndroidSigningStorePass>
+    <AndroidSigningKeyAlias>$(KEY_ALIAS)</AndroidSigningKeyAlias>
+    <AndroidSigningKeyPass>$(KEY_PASSWORD)</AndroidSigningKeyPass-->
+
+    <!--AndroidSigningKeyStore>QRDessFree.jks</AndroidSigningKeyStore>
+	  <AndroidSigningStorePass>freede2S2025</AndroidSigningStorePass>
+	  <AndroidSigningKeyAlias>qrdessfreekey</AndroidSigningKeyAlias>
+	  <AndroidSigningKeyPass>KeyPassQRDessFreede2S</AndroidSigningKeyPass-->
 
 		<!-- Display name -->
 		<ApplicationTitle>QRDessFree</ApplicationTitle>
