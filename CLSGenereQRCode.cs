@@ -6,13 +6,15 @@ using System.Text;
 namespace QRDessFree
 {
     /// <summary>Fonctions pour la génération de QRCode</summary>
-    public static partial class CLSGenereQRCode
+    public static partial class clsGenereQRCode
     {
         /// <summary>Chaine représentant tous les caractères alphanumérique. Leur poisition dans la chaine donne leur code.</summary>
         public static string CharAlphaNum = "0123456789ABCDEFGHIJKLMNOPQRSTUVWXYZ $%*+-./:";
         public static string CharNum = "0123456789";
 
         public static int iPas = 7; // Taille d'un "pixel" du QR Code, affecté à la taille par défaut
+
+        public static int tailleBordure = 1;
 
         /// <summary>Table des modulos des puissances de 2 du Gallois Field</summary>
         public static byte[] LogTableGF256 = new byte[256];
@@ -187,9 +189,9 @@ namespace QRDessFree
                 b = !b;
             }
 
-            byte[] DataCodewords = CLSGenereQRCode.GenereDataCodewords(s);
+            byte[] DataCodewords = clsGenereQRCode.GenereDataCodewords(s);
             GroupBlockStruct[] QRCodeDataAndCorrections= null;
-            byte[] CorrectionCodeWords = CLSGenereQRCode.GenereLitAllCodewords(ref DataCodewords, Version, ref QRCodeDataAndCorrections, ref nbBitsCorrection);
+            byte[] CorrectionCodeWords = clsGenereQRCode.GenereLitAllCodewords(ref DataCodewords, Version, ref QRCodeDataAndCorrections, ref nbBitsCorrection);
 
             /* string ss = ConvertBytesString(CorrectionCodeWords);  ---- pour test ----*/ 
 

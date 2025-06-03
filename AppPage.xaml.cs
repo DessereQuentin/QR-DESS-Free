@@ -1,6 +1,12 @@
 ﻿using SkiaSharp;
-using static QRDessFree.CLSGenereQRCode;
+using static QRDessFree.clsGenereQRCode;
 using static QRDessFree.clsGraphicsQRCode;
+#if WINDOWS
+using Microsoft.UI.Xaml;
+using Windows.Storage.Pickers;
+using WinRT.Interop;
+using Microsoft.Maui.Controls;
+#endif
 
 namespace QRDessFree
 {
@@ -8,21 +14,20 @@ namespace QRDessFree
     {
         /// <summary>Sauvegarde du iDrawable du graphicsView du QrCode</summary>
         private IDrawable qrDrawable;
-        private int pourcentCorrection;
-        private int tailleBordure = 1;
-        private int nbBitCorrection = 0; // Nombre de bits de correction du QR Code
+        private float pourcentCorrection;
         private SKBitmap saveSKBitmap; // Sauvegarde de l'image détourée pour la réutiliser lors du partage
 
         public AppPage()
         {
             InitializeComponent();
-
         }
+
         /// <summary>Incorporation au QRCODE d'une image choisie par l'utilisateur</summary>
         /// <returns>O si aucune image choisie, 1 sinon</returns>
         private async Task<int> IncorporeImage()
         {
             SKBitmap withBorder;
+
             // L'utilisateur choisit une image
             var result = await FilePicker.Default.PickAsync(new PickOptions
             {
@@ -33,28 +38,39 @@ namespace QRDessFree
             // S'il n'a pas choisi d'image, on ne fait rien
             if (result == null) return 0;
 
-            // On sauve le nom du fichier pour pouvoir le réouvrir ultérieurement lors du partage
-            string filenameImage = result.FullPath; //"C:/Temp/YamahaVide.png";
-
             // Etape 0 on lit l'image et on recherche si elle contient des pixels 
-            using var input = LoadBitmap(filenameImage);
+            using var input = LoadBitmap(result.FullPath);
             bool isPixelTransparent = RecherchePixelTransparent(input);
 
+            // Pas du QRCode 
+            int tailleModuleAvecBord = (clsGenereQRCode.ModulesQRCode.GetLength(0) + 2 * clsGenereQRCode.tailleBordure);
+
+            // On calcule la surface de l'image cible pour qu'elle s'adapte à la taille du QR Code de partage
+            int tailleImageQRCode = tailleModuleAvecBord * tailleGraphiqueModuleQrCode();
+            int surfaceImagecible = (int)(tailleImageQRCode * tailleImageQRCode * (pourcentCorrection / 200.0));
+
+            // On calcule le coefficient de division de l'image 
+            double divImage = Math.Sqrt(1.0 * surfaceImagecible / (input.Width * input.Height));
+
             // On détermine la taille de la bordure de détourage à partir de la surface du QRCode et de celle de l'image lue
-            double surface = qrCodeView.Width * qrCodeView.Height * (double)pourcentCorrection / 200.0; // On conserve la moitié des bits de correction
-            int tailleBordDetourage =(int)( 2.0 * Math.Sqrt(((double)input.Width * (double)input.Height) / surface));
+            //int tailleBordDetourage =(int)( 2.0 * Math.Sqrt(((double)input.Width * (double)input.Height) / surface));
+            int tailleBordDetourage;
+            if (divImage < 1) tailleBordDetourage = (int)Math.Round(2.0 / divImage);
+            else              tailleBordDetourage = 2;
             if (tailleBordDetourage < 2) tailleBordDetourage = 2;
 
             // Etape 1 : On conserve à l'image juste un cadre minimum de pixels blancs/transparents
-            var withCadre = AddTransparentBorder(input, isPixelTransparent, tailleBordDetourage);
-
-            // Etape 2 : on réduit l'image pour améliorer la performance du détourage 
             SKBitmap imageReduite;
-            if (withCadre.Width * withCadre.Height > 200000) imageReduite = ReduitImage(withCadre, qrCodeView.Width, qrCodeView.Height, 200000);
-            else imageReduite = withCadre;
+            SKBitmap withCadre = AddTransparentBorder(input, isPixelTransparent, tailleBordDetourage);
 
-            using (imageReduite)
+            // Etape 2 : on réduit l'image pour améliorer la performance du détourage à la taille cible pour le QR Code de partage (cela permet d'augmenter la qualité de l'image en ne la déformant pas)
+            // On recalcule le coefficient de division de l'image 
+            divImage = Math.Sqrt(1.0 * surfaceImagecible / (withCadre.Width * withCadre.Height));
+            imageReduite = ReduitImage(withCadre, qrCodeView.Width, qrCodeView.Height, divImage);
+
+             using (imageReduite)
             {
+
                 SKBitmap transparent;
 
                 // Étape 3 : si aucun pixel de transparence, suppression du fond blanc
@@ -65,6 +81,7 @@ namespace QRDessFree
                 using (transparent)
                 {
                     // On recalcule la taille de la bordure sur l'image réduite
+                    double surface = qrCodeView.Width * qrCodeView.Height * (double)pourcentCorrection / 200.0; 
                     tailleBordDetourage = (int)(2.0 * Math.Sqrt(((double)imageReduite.Width * (double)imageReduite.Height) / surface));
                     if (tailleBordDetourage < 2) tailleBordDetourage = 2;
 
@@ -98,6 +115,7 @@ namespace QRDessFree
                     await DisplayAlert("Incorporation d'image", "Veuillez d'abord générer un QR Code.", "OK");
                     return;
                 }
+
                 int retour = await IncorporeImage();
             }
 
@@ -177,7 +195,7 @@ namespace QRDessFree
             if (bTelecharge) filePath = Path.Combine(FileSystem.AppDataDirectory, "QRCode" + DateTime.Now.ToString("yyyy-MM-dd_HH-mm-ss") + ".jpg");
             else filePath = Path.Combine(FileSystem.CacheDirectory, "QRCode" + DateTime.Now.ToString("yyyy-MM-dd_HH-mm-ss") + ".jpg");
 
-            clsGraphicsQRCode.SaveDrawingToJpg(filePath, (int) qrCodeView.Width, (int)qrCodeView.Height, tailleBordure,pourcentCorrection, saveSKBitmap);
+            clsGraphicsQRCode.SaveDrawingToJpg(filePath, tailleBordure, saveSKBitmap);
 
             return filePath;
         }
@@ -225,7 +243,41 @@ namespace QRDessFree
 
             await DisplayAlert(titre, message, bouton);
         }
- 
+
+
+#if WINDOWS
+
+
+public static class FilePickerWorkaround
+{
+
+
+    public static async Task<string?> PickImageFileAsync(Microsoft.Maui.Controls.Window mauiWindow)
+    {
+        var picker = new FileOpenPicker();
+        picker.FileTypeFilter.Add(".png");
+        picker.FileTypeFilter.Add(".jpg");
+        picker.FileTypeFilter.Add(".jpeg");
+
+        var platformView = mauiWindow.Handler?.PlatformView;
+        if (platformView is not Microsoft.UI.Xaml.Window nativeWindow)
+            throw new InvalidOperationException("Fenêtre native invalide.");
+
+        var hwnd = WindowNative.GetWindowHandle(nativeWindow);
+        if (hwnd == IntPtr.Zero)
+            throw new InvalidOperationException("Handle de fenêtre nul.");
+
+        InitializeWithWindow.Initialize(picker, hwnd);
+
+        var file = await picker.PickSingleFileAsync();
+        return file?.Path;
+    }
+
+
+
+}
+#endif
+
     }
 
 }
