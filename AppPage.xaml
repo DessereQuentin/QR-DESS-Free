@@ -4,20 +4,16 @@
              x:Class="QRDessFree.AppPage">
 
     <ContentPage.ToolbarItems>
-        <ToolbarItem IconImageSource="help_icon.png"
-                     Text="Aide"
-                     Order="Primary"
-                     Priority="0"
-                     Clicked="OnHelpClicked" />
+        <ToolbarItem IconImageSource="help_icon.png" Text="Aide" Order="Primary" Priority="0" Clicked="OnHelpClicked" />
     </ContentPage.ToolbarItems>
     
     <ScrollView>
         <VerticalStackLayout Padding="20" Spacing="15">
 
-        <!-- Texte à saisir -->
+        <!-- Saisie du texte à encoder -->
         <Label Text="Texte à encoder :" />
-        <Entry x:Name="txtInput" Placeholder="Entrez votre texte"/>
-
+        <Editor x:Name="txtInput" Placeholder="Entrez votre texte ici..." AutoSize="TextChanges" HeightRequest="90" />
+            
         <!-- Niveau de correction -->
         <Label Text="Niveau de correction :" />
         <HorizontalStackLayout>

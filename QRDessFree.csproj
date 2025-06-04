@@ -2,13 +2,28 @@
 
   <Import Project="AndroidKeyStore.Local.props" Condition="Exists('AndroidKeyStore.Local.props')" />
 
+  <PropertyGroup Condition="'$(TargetFramework)' == 'net9.0-android'">
+    <AndroidPackageFormat>aab</AndroidPackageFormat>
+    <!--PublishAot>true</PublishAot-->
+    <RuntimeIdentifiers>android-arm64</RuntimeIdentifiers>
+    <AndroidSupportedAbis>arm64-v8a</AndroidSupportedAbis>
+    <AndroidLinkMode>SdkAndUserAssemblies</AndroidLinkMode>
+    <AndroidStripManagedSymbols>true</AndroidStripManagedSymbols>
+    <AndroidStripEmbeddedNativeLibraries>true</AndroidStripEmbeddedNativeLibraries>
+    <PublishTrimmed>true</PublishTrimmed>
+    <AndroidResourceConfigurations>hdpi;xhdpi;xxhdpi</AndroidResourceConfigurations>
+    <AndroidSupportedCultures>fr</AndroidSupportedCultures>
+  </PropertyGroup>
+
+
+
   <PropertyGroup>
 		<TargetFrameworks>net9.0-android;net9.0-ios;net9.0-maccatalyst</TargetFrameworks>
 		<TargetFrameworks Condition="$([MSBuild]::IsOSPlatform('windows'))">$(TargetFrameworks);net9.0-windows10.0.19041.0</TargetFrameworks>
 		<!-- Uncomment to also build the tizen app. You will need to install tizen by following this: https://github.com/Samsung/Tizen.NET -->
 		<!-- <TargetFrameworks>$(TargetFrameworks);net9.0-tizen</TargetFrameworks> -->
 
-		<!-- Note for MacCatalyst:
+    <!-- Note for MacCatalyst:
 		The default runtime is maccatalyst-x64, except in Release config, in which case the default is maccatalyst-x64;maccatalyst-arm64.
 		When specifying both architectures, use the plural <RuntimeIdentifiers> instead of the singular <RuntimeIdentifier>.
 		The Mac App Store will NOT accept apps with ONLY maccatalyst-arm64 indicated;
@@ -22,18 +37,7 @@
 		<ImplicitUsings>enable</ImplicitUsings>
 		<Nullable>enable</Nullable>
 
-    <!--AndroidKeyStore>true</AndroidKeyStore>
-    <AndroidSigningKeyStore>$(KEYSTORE_PATH)</AndroidSigningKeyStore>
-    <AndroidSigningStorePass>$(KEYSTORE_PASSWORD)</AndroidSigningStorePass>
-    <AndroidSigningKeyAlias>$(KEY_ALIAS)</AndroidSigningKeyAlias>
-    <AndroidSigningKeyPass>$(KEY_PASSWORD)</AndroidSigningKeyPass-->
-
-    <!--AndroidSigningKeyStore>QRDessFree.jks</AndroidSigningKeyStore>
-	  <AndroidSigningStorePass>freede2S2025</AndroidSigningStorePass>
-	  <AndroidSigningKeyAlias>qrdessfreekey</AndroidSigningKeyAlias>
-	  <AndroidSigningKeyPass>KeyPassQRDessFreede2S</AndroidSigningKeyPass-->
-
-		<!-- Display name -->
+ 		<!-- Display name -->
 		<ApplicationTitle>QRDessFree</ApplicationTitle>
 
 		<!-- App Identifier -->
@@ -53,54 +57,64 @@
 		<TargetPlatformMinVersion Condition="$([MSBuild]::GetTargetPlatformIdentifier('$(TargetFramework)')) == 'windows'">10.0.17763.0</TargetPlatformMinVersion>
 		<SupportedOSPlatformVersion Condition="$([MSBuild]::GetTargetPlatformIdentifier('$(TargetFramework)')) == 'tizen'">6.5</SupportedOSPlatformVersion>
 		<Title>QR Dess Free</Title>
+		<AssemblyVersion>1.1.0</AssemblyVersion>
+		<FileVersion>1.1.0</FileVersion>
 	</PropertyGroup>
 
 	<PropertyGroup Condition="'$(Configuration)|$(TargetFramework)|$(Platform)'=='Debug|net9.0-android|AnyCPU'">
 	  <ApplicationTitle>QR Dess Free</ApplicationTitle>
 	  <ApplicationDisplayVersion>1.1</ApplicationDisplayVersion>
-	  <ApplicationVersion>2</ApplicationVersion>
+	  <ApplicationVersion>3</ApplicationVersion>
+	  <ApplicationId>com.DESSERE.QRDessFree</ApplicationId>
 	</PropertyGroup>
 
 	<PropertyGroup Condition="'$(Configuration)|$(TargetFramework)|$(Platform)'=='Debug|net9.0-ios|AnyCPU'">
 	  <ApplicationTitle>QR Dess Free</ApplicationTitle>
 	  <ApplicationDisplayVersion>1.1</ApplicationDisplayVersion>
-	  <ApplicationVersion>2</ApplicationVersion>
+	  <ApplicationVersion>3</ApplicationVersion>
+	  <ApplicationId>com.DESSERE.QRDessFree</ApplicationId>
 	</PropertyGroup>
 
 	<PropertyGroup Condition="'$(Configuration)|$(TargetFramework)|$(Platform)'=='Debug|net9.0-maccatalyst|AnyCPU'">
 	  <ApplicationTitle>QR Dess Free</ApplicationTitle>
 	  <ApplicationDisplayVersion>1.1</ApplicationDisplayVersion>
-	  <ApplicationVersion>2</ApplicationVersion>
+	  <ApplicationVersion>3</ApplicationVersion>
+	  <ApplicationId>com.DESSERE.QRDessFree</ApplicationId>
 	</PropertyGroup>
 
 	<PropertyGroup Condition="'$(Configuration)|$(TargetFramework)|$(Platform)'=='Debug|net9.0-windows10.0.19041.0|AnyCPU'">
 	  <ApplicationTitle>QR Dess Free</ApplicationTitle>
 	  <ApplicationDisplayVersion>1.1</ApplicationDisplayVersion>
-	  <ApplicationVersion>2</ApplicationVersion>
+	  <ApplicationVersion>3</ApplicationVersion>
+	  <ApplicationId>com.DESSERE.QRDessFree</ApplicationId>
 	</PropertyGroup>
 
 	<PropertyGroup Condition="'$(Configuration)|$(TargetFramework)|$(Platform)'=='Release|net9.0-android|AnyCPU'">
 	  <ApplicationTitle>QR Dess Free</ApplicationTitle>
 	  <ApplicationDisplayVersion>1.1</ApplicationDisplayVersion>
-	  <ApplicationVersion>2</ApplicationVersion>
+	  <ApplicationVersion>3</ApplicationVersion>
+	  <ApplicationId>com.DESSERE.QRDessFree</ApplicationId>
 	</PropertyGroup>
 
 	<PropertyGroup Condition="'$(Configuration)|$(TargetFramework)|$(Platform)'=='Release|net9.0-ios|AnyCPU'">
 	  <ApplicationTitle>QR Dess Free</ApplicationTitle>
 	  <ApplicationDisplayVersion>1.1</ApplicationDisplayVersion>
-	  <ApplicationVersion>2</ApplicationVersion>
+	  <ApplicationVersion>3</ApplicationVersion>
+	  <ApplicationId>com.DESSERE.QRDessFree</ApplicationId>
 	</PropertyGroup>
 
 	<PropertyGroup Condition="'$(Configuration)|$(TargetFramework)|$(Platform)'=='Release|net9.0-maccatalyst|AnyCPU'">
 	  <ApplicationTitle>QR Dess Free</ApplicationTitle>
 	  <ApplicationDisplayVersion>1.1</ApplicationDisplayVersion>
-	  <ApplicationVersion>2</ApplicationVersion>
+	  <ApplicationVersion>3</ApplicationVersion>
+	  <ApplicationId>com.DESSERE.QRDessFree</ApplicationId>
 	</PropertyGroup>
 
 	<PropertyGroup Condition="'$(Configuration)|$(TargetFramework)|$(Platform)'=='Release|net9.0-windows10.0.19041.0|AnyCPU'">
 	  <ApplicationTitle>QR Dess Free</ApplicationTitle>
 	  <ApplicationDisplayVersion>1.1</ApplicationDisplayVersion>
-	  <ApplicationVersion>2</ApplicationVersion>
+	  <ApplicationVersion>3</ApplicationVersion>
+	  <ApplicationId>com.DESSERE.QRDessFree</ApplicationId>
 	</PropertyGroup>
 
 	<ItemGroup>

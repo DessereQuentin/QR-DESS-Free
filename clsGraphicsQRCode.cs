@@ -6,6 +6,16 @@ namespace QRDessFree
     /// <summary>Fonctions pour la mise en forme graphique du QRCode</summary>
     public static partial class clsGraphicsQRCode
     {
+        /// <summary>taux de division de l'image à insérer dans un QRCode par rapport au pourcentageCorrection</summary>
+        /// <remarks>Permet de garder 60% des modules de correction</remarks>
+        public static double tauxDivisionImage = 250.0;
+
+        /// <summary>Sauvegarde de l'image détourée pour la réutiliser lors du partage</summary>
+        public static SKBitmap saveSKBitmap=null;
+
+        /// <summary>Message d'erreur à remonter au thread principal</summary>
+        public static string messageErreur = "";
+
         /// <summary>Détourage de l'image remplace les pixels proches du blanc ou transparent par des pixels transparents Jusqu'à rencontrer des pixels ne répondant pas à cette condition</summary>
         /// <param name="inputBitmap">Image à traitée</param>
         /// <remarks>On inclut les pixels transparent dans l'algorithme même s'il n'y a pas besoin de les remplacer pour assurer la continuité du détourage</remarks>
@@ -271,6 +281,19 @@ namespace QRDessFree
             using var stream = File.OpenRead(path);
             return SKBitmap.Decode(stream);
         }
+        /// <summary>Calcule d'un module de QRCode en fonction de la taille écran </summary>
+        public static void tailleEcranModuleQRCode()
+        {
+            var largeurDip = DeviceDisplay.MainDisplayInfo.Width / DeviceDisplay.MainDisplayInfo.Density;
+            int TailleQrCode = (clsGenereQRCode.ModulesQRCode.GetLength(0) + 2 * clsGenereQRCode.tailleBordure);
+            clsGenereQRCode.iPas = (int)largeurDip / TailleQrCode;
+
+            // la résolution maximum est 10
+            if (clsGenereQRCode.iPas > 7) clsGenereQRCode.iPas = 7;
+
+            // La résolution minimum est 2
+            if (clsGenereQRCode.iPas < 2) clsGenereQRCode.iPas = 2; 
+        }
 
         /// <summary>Calcule de la taille graphique d'un module de QRCode</summary>
         /// <returns>Taille du module</returns>
@@ -278,93 +301,137 @@ namespace QRDessFree
         {
             return (int)Math.Round(1000.0 / (clsGenereQRCode.ModulesQRCode.GetLength(0) + 2 * clsGenereQRCode.tailleBordure));
         }
- 
-        /// <summary>Regénère le QRCode dans un canvas en fusionnant l'image le cas échéant et l'enregistre dans un fichier jpeg pour le partager</summary>
-        /// <param name="filePath">Fichier dans lequel enregistrer le QRCode</param>
-        /// <param name="tailleBordure">Taille de la bordure à tracer (en multiple de la taille d'un pixel du QRCode)</param>
-        /// <param name="saveSKBitmap">Image à incorporer dans le QRCode</param>
-        public static async void SaveDrawingToJpg(string filePath, int tailleBordure, SKBitmap saveSKBitmap)
+
+        /// <summary>Ouvre une image choisit par l'utilisateur et la détoure pour l'afficher au centre du QR Code</summary>
+        /// <param name="filePath">Fichier à ouvrir</param>
+        /// <param name="qrCodeView">Graphics view dans lequel afficher le QR Code avec l'image incoporée</param>
+        /// <param name="pourcentCorrection">pourcentage de modules de correction du QR Code </param>
+        /// <returns></returns>
+        public static async Task<string> TraiteImage(string filePath, Microsoft.Maui.Controls.GraphicsView qrCodeView, float pourcentCorrection)
         {
-
-            // On supprime le fichier temporaire s'il existe déjà
-            SupprimerAnciensFichiersQRCode("QRCode*.jpg");
-
-            // on crée un canvas pour le tracé
-            int size = tailleGraphiqueModuleQrCode() * (2 * tailleBordure + clsGenereQRCode.ModulesQRCode.GetLength(0));
-            using var bitmap = new SKBitmap(size, size);
-            using var canvas = new SKCanvas(bitmap);
-
-            // On trace le QRCode en le fusionnant avec l'image
-            drawQRCode(canvas, size,  tailleBordure, saveSKBitmap);
-
-            // On enregistre le QRCode dans un fichier jpeg
-            using var image = SKImage.FromBitmap(bitmap);
-            using var data = image.Encode(SKEncodedImageFormat.Jpeg, 100);
-            using var stream = File.OpenWrite(filePath);
-            data.SaveTo(stream);
-        }
-
-        /// <summary>Dessine le QRCode et le cas échéant l'image à incoprorer pour l'afficher à l'écran</summary>
-        /// <param name="canvas">ICanvas conteneur du QRCode</param>
-        /// <param name="width">Largeur du QRCode</param>
-        /// <param name="height">Hauteur du QRCode</param>
-        /// <param name="tailleBordure">Taille de la bordure à tracer (en multiple de la taille d'un pixel du QRCode)</param>
-        /// <param name="pourcentCorrection">Pourcentage de correction fonction du niveau de correction (permet de savoir quelle surface accorder à l'image à incoprorer)</param>
-        public static void drawQRCode(ICanvas canvas, float width, float height, Microsoft.Maui.Graphics.IImage sourceImage, int tailleBordure, float pourcentCorrection)
-        {
-            // Dessiner l'image de fond en utilisant la même méthode que pour l'image de qrCodeView
-            int size = clsGenereQRCode.ModulesQRCode.GetLength(0);
-            int iEntourage = tailleBordure * clsGenereQRCode.iPas;
-
-            // Fond blanc
-            canvas.FillColor = Colors.White;
-            canvas.FillRectangle(0, 0, width, height);
-
-            // Dessiner chaque module du QR Code
-            canvas.FillColor = Colors.Black;
-            for (int i = 0; i < size; i++)
+            try
             {
-                for (int j = 0; j < size; j++)
+
+                SKBitmap withBorder = null;
+
+                // Etape 0 on lit l'image et on recherche si elle contient des pixels 
+                using var input = LoadBitmap(filePath);
+                bool isPixelTransparent = RecherchePixelTransparent(input);
+
+                // Pas du QRCode 
+                int tailleModuleAvecBord = (clsGenereQRCode.ModulesQRCode.GetLength(0) + 2 * clsGenereQRCode.tailleBordure);
+
+                // On calcule la surface de l'image cible pour qu'elle s'adapte à la taille du QR Code de partage
+                int tailleImageQRCode = tailleModuleAvecBord * tailleGraphiqueModuleQrCode();
+                int surfaceImagecible = (int)(tailleImageQRCode * tailleImageQRCode * (pourcentCorrection / tauxDivisionImage));
+
+                // On calcule le coefficient de division de l'image 
+                double divImage = Math.Sqrt(1.0 * surfaceImagecible / (input.Width * input.Height));
+
+                // On détermine la taille de la bordure de détourage à partir de la surface du QRCode et de celle de l'image lue
+                //int tailleBordDetourage =(int)( 2.0 * Math.Sqrt(((double)input.Width * (double)input.Height) / surface));
+                int tailleBordDetourage;
+                if (divImage < 1) tailleBordDetourage = (int)Math.Round(2.0 / divImage);
+                else tailleBordDetourage = 2;
+                if (tailleBordDetourage < 2) tailleBordDetourage = 2;
+
+                // Etape 1 : On conserve à l'image juste un cadre minimum de pixels blancs/transparents
+                SKBitmap imageReduite;
+                SKBitmap withCadre = AddTransparentBorder(input, isPixelTransparent, tailleBordDetourage);
+
+                // Etape 2 : on réduit l'image pour améliorer la performance du détourage à la taille cible pour le QR Code de partage (cela permet d'augmenter la qualité de l'image en ne la déformant pas)
+                // On recalcule le coefficient de division de l'image 
+                divImage = Math.Sqrt(1.0 * surfaceImagecible / (withCadre.Width * withCadre.Height));
+                imageReduite = ReduitImage(withCadre, qrCodeView.Width, qrCodeView.Height, divImage);
+
+                using (imageReduite)
                 {
-                    if (clsGenereQRCode.ModulesQRCode[i, j] == 1)
+
+                    SKBitmap transparent;
+
+                    // Étape 3 : si aucun pixel de transparence, suppression du fond blanc
+                    if (isPixelTransparent == false) transparent = RemoveWhiteBorder(imageReduite);
+                    else transparent = imageReduite;
+
+                    // Suite du traitement de l'image
+                    using (transparent)
                     {
-                        float x1 = iEntourage + i * clsGenereQRCode.iPas;
-                        float y1 = iEntourage + j * clsGenereQRCode.iPas;
-                        canvas.FillRectangle(x1, y1, clsGenereQRCode.iPas, clsGenereQRCode.iPas);
+                        // On recalcule la taille de la bordure sur l'image réduite
+                        double surface = qrCodeView.Width * qrCodeView.Height * (double)pourcentCorrection / tauxDivisionImage;
+                        tailleBordDetourage = (int)(2.0 * Math.Sqrt(((double)imageReduite.Width * (double)imageReduite.Height) / surface));
+                        if (tailleBordDetourage < 2) tailleBordDetourage = 2;
+
+                        // Étape 4 : on ajoute une bordure blanche autour de l'image 
+                        withBorder = AddWhiteOutline(transparent, tailleBordDetourage);
+
+                        // Etape 5 : on enregistre le résultat dans le cache
+                        string cachePath = Microsoft.Maui.Storage.FileSystem.CacheDirectory;
+                        saveSKBitmap = withBorder;
+
+                        // On calcule la taille d'un module à l'écran
+                        tailleEcranModuleQRCode();
+
+                        // On affecte le résultat fusionné à la vue graphique
+                        qrCodeView.Drawable = new ImageDrawable(ConvertSKBitmapToMauiImage(saveSKBitmap), pourcentCorrection, clsGenereQRCode.iPas);
+                        qrCodeView.Invalidate();
+
                     }
                 }
+
+                return "";
             }
-
-            // Si une image est fournie, on l'incorpore dans le QR Code
-            if (sourceImage != null)
+            catch (Exception ex)
             {
-                // Coefficient de division de l'image pour l'adapter à la taille du QR Code
-                double surface = width * height * (Double)pourcentCorrection / 200.0;
-                double divImage = Math.Sqrt(surface / (sourceImage.Width * sourceImage.Height));
-
-                // Taille réduite de l'image
-                double scaledWidth = (double)sourceImage.Width * divImage;
-                double scaledHeight = (double)sourceImage.Height * divImage;
-
-                //Position de l'image
-                double x = (double)(width / 2 - scaledWidth / 2);
-                double y = (double)(height / 2 - scaledHeight / 2);
-
-                canvas.DrawImage(sourceImage, (int)x, (int)y, (float)scaledWidth, (float)scaledHeight);
+                return "Votre application QR Dess Free a rencontré un problème, veuillez contacter le développeur en lui communiquant le message ci-dessous :\n\n"
+                   + $"{ex}";
             }
 
         }
 
-        /// <summary>Dessine le QRCode et le cas échéant l'image à incoprorer pour le partager</summary>
+        /// <summary>Regénère le QRCode dans un canvas en fusionnant l'image le cas échéant et l'enregistre dans un fichier jpeg pour le partager</summary>
+        /// <param name="filePath">Fichier dans lequel enregistrer le QRCode</param>
+        /// <param name="saveSKBitmap">Image à incorporer dans le QRCode</param>
+        public static async Task<string> SaveDrawingToJpg(string filePath, SKBitmap saveSKBitmap)
+        {
+            try
+            {
+
+                // On supprime le fichier temporaire s'il existe déjà
+                SupprimerAnciensFichiersQRCode("QRCode*.jpg");
+
+                // on crée un canvas pour le tracé
+                int size = tailleGraphiqueModuleQrCode() * (2 * clsGenereQRCode.tailleBordure + clsGenereQRCode.ModulesQRCode.GetLength(0));
+                using var bitmap = new SKBitmap(size, size);
+                using var canvas = new SKCanvas(bitmap);
+
+                // On trace le QRCode en le fusionnant avec l'image
+                drawQRCode(canvas, size, saveSKBitmap, tailleGraphiqueModuleQrCode(), 1.0);
+
+                // On enregistre le QRCode dans un fichier jpeg
+                using var image = SKImage.FromBitmap(bitmap);
+                using var data = image.Encode(SKEncodedImageFormat.Jpeg, 100);
+                using var stream = File.OpenWrite(filePath);
+                data.SaveTo(stream);
+                return "";
+            }
+            catch (Exception ex)
+            {
+                return "Votre application QR Dess Free a rencontré un problème, veuillez contacter le développeur en lui communiquant le message ci-dessous :\n\n"
+                   + $"{ex}";
+            }
+        }
+
+        /// <summary>Dessine le QRCode et le cas échéant l'image à incorporer pour le partager ou l'afficher à l'écran</summary>
         /// <param name="canvas">Canvas conteneur du QRCode</param>
         /// <param name="sizeQRCode">Taille du QR Code (nombre de pixels du côté du carré)</param>
-        /// <param name="tailleBordure">Taille de la bordure à tracer (en multiple de la taille d'un pixel du QRCode)</param>
         /// <param name="saveSKBitmap">Image à incorporer dans le QRCode</param>
-        public static void drawQRCode(SKCanvas canvas, int sizeQRCode, int tailleBordure, SKBitmap saveSKBitmap)
+        /// <param name="tailleModule">Taille d'un module du QR Code (en pixels)</param>
+        /// <param name="divImage">Facteur de réduction de l'image pour affichage écran (=1 pour le partage)</param>
+        public static void drawQRCode(SKCanvas canvas, int sizeQRCode,  SKBitmap saveSKBitmap, int tailleModule, double divImage)
         {
-            int tailleModule = tailleGraphiqueModuleQrCode();
+
             int size = clsGenereQRCode.ModulesQRCode.GetLength(0);
-            int iEntourage = tailleBordure * tailleModule;
+            int iEntourage = clsGenereQRCode.tailleBordure * tailleModule;
 
             // Crée un SKPaint blanc pour le fond
             var paintFond = new SKPaint
@@ -397,19 +464,16 @@ namespace QRDessFree
                 }
             }
 
-            // Si elle existe, on dessine l'image à incorporer au centre du QRCode
-
-           Double scaledWidth = saveSKBitmap.Width ;
-           Double scaledHeight = saveSKBitmap.Height;
-           Double x = (sizeQRCode - scaledWidth) / 2.0;
-           Double y = (sizeQRCode - scaledHeight) / 2.0;
-
             // Création et renvoi du rectangle de destination pour l'image
-
-            if (saveSKBitmap!=null)
+            if (saveSKBitmap != null)
             {
+
+                Double scaledWidth = saveSKBitmap.Width * divImage;
+                Double scaledHeight = saveSKBitmap.Height * divImage;
+                Double x = (sizeQRCode - scaledWidth) / 2.0;
+                Double y = (sizeQRCode - scaledHeight) / 2.0;
+
                 var Rect = new SKRect((float)x, (float)y, (float)(x + scaledWidth), (float)(y + scaledHeight));
-                //canvas.DrawBitmap(saveSKBitmap, destRect((int)width, (int)height, saveSKBitmap, pourcentCorrection));
                 canvas.DrawBitmap(saveSKBitmap, Rect);
             }
 
@@ -424,7 +488,7 @@ namespace QRDessFree
         public static SKRect destRect(int width, int height, SKBitmap sourceImage, float pourcentCorrection)
         {
             // On calcule le facteur de division de l'image permettant de couvrir la moitié de la surface des bits de correction (on ne tient pas compte des bits de mise en forme)
-            double surface = (double)width * height * (double)pourcentCorrection / 200.0;
+            double surface = (double)width * height * (double)pourcentCorrection / tauxDivisionImage;
             double divImage = Math.Sqrt(surface / (sourceImage.Width * sourceImage.Height));
 
             // Calcul de la position et de la taille de l'image cible 
@@ -442,22 +506,29 @@ namespace QRDessFree
         /// <summary>Interface de tracer du QRCode</summary>
         public class ImageDrawable : IDrawable
         {
-            private Microsoft.Maui.Graphics.IImage _sourceImage;
-            private int _tailleBordure;
-            private float _pourcentCorrection;
-            private byte[,] _modulesQRCode;
+            private Microsoft.Maui.Graphics.IImage _cibleImage;
 
             /// <summary>Sauvegardedans la classe des paramètres du tracé</summary>
             /// <param name="sourceImage">Image à tracer</param>
             /// <param name="pourcentCorrection">Pourcentage de correction du QRCode</param>
-            /// <param name="modulesQRCode">Table des bits du QR Code</param>
-            /// <param name="tailleBordure">Taille de la bordure autour du QRCode</param>
-            public ImageDrawable(Microsoft.Maui.Graphics.IImage sourceImage, float pourcentCorrection, byte[,] modulesQRCode, int tailleBordure)
+            public ImageDrawable(Microsoft.Maui.Graphics.IImage sourceImage, float pourcentCorrection, int iPas)
             {
-                _sourceImage = sourceImage;
-                _pourcentCorrection = pourcentCorrection;
-                _modulesQRCode = modulesQRCode;
-                _tailleBordure = tailleBordure;
+
+                // Allocation de l'image
+                int size = iPas * (2 * clsGenereQRCode.tailleBordure + clsGenereQRCode.ModulesQRCode.GetLength(0));
+                using var bitmap = new SKBitmap(size, size);
+                using var canvas = new SKCanvas(bitmap);
+
+                // Coefficient de division de l'image pour l'adapter à la taille du QR Code
+                double surface = size * size * (Double)pourcentCorrection / tauxDivisionImage;
+                double divImage = 0 ;
+                if (saveSKBitmap != null) divImage = Math.Sqrt(surface / (saveSKBitmap.Width * saveSKBitmap.Height));
+
+                // On trace le QRCode en le fusionnant avec l'image
+                drawQRCode(canvas, size, saveSKBitmap, iPas, divImage);
+
+                _cibleImage = ConvertSKBitmapToMauiImage(bitmap);
+
             }
 
             /// <summary>Appel de la fonction de dessin du QRCode</summary>
@@ -465,10 +536,19 @@ namespace QRDessFree
             /// <param name="dirtyRect">Rectangle de tracé</param>
             public void Draw(ICanvas canvas, RectF dirtyRect)
             {
+            try {
 
-                drawQRCode(canvas, dirtyRect.Width, dirtyRect.Height, _sourceImage, _tailleBordure, _pourcentCorrection);
+                    canvas.DrawImage(_cibleImage, 0, 0, dirtyRect.Width, dirtyRect.Height);
+
             }
-        }
+            catch (Exception ex)
+            {
+                    messageErreur = "Votre application QR Dess Free a rencontré un problème, veuillez contacter le développeur en lui communiquant le message ci-dessous :\n\n";
+
+            }
+
+    }
+}
 
 
         /// <summary>Nettoie les fichiers dans le cache avant de créer le fichier temporaire pour le partage</summary>
@@ -510,27 +590,31 @@ namespace QRDessFree
         /// <returns>Renvoie l'image du QRCode sous forme de BitMap</returns>
         public static ImageDrawable GenereImageQRCode(string Texte, string Correction, int TailleBordure, ref int ImageSize, ref float pourcentCorrection)
         {
-            // Initialisation des tables de travail
-            clsGenereQRCode.InitTables();
-            // Génération du tableau de bytes du QRCode
-            bool bOK = true;
-            int nbBitsCorrection = 0;   
-            clsGenereQRCode.ModulesQRCode = clsGenereQRCode.GenereQRCode(Texte, Correction, ref bOK, ref nbBitsCorrection);
-            if (bOK != true) return null;
+            try
+            {
 
-            // Récupération de la largeur de l'écran pour adapter la résolution du QR Code
-            var largeurDip = DeviceDisplay.MainDisplayInfo.Width / DeviceDisplay.MainDisplayInfo.Density;
-            int TailleQrCode = (clsGenereQRCode.ModulesQRCode.GetLength(0) + 2 * TailleBordure);
-            clsGenereQRCode.iPas = (int)largeurDip / TailleQrCode;
+                // Initialisation des tables de travail
+                clsGenereQRCode.InitTables();
+                // Génération du tableau de bytes du QRCode
+                bool bOK = true;
+                int nbBitsCorrection = 0;   
+                clsGenereQRCode.ModulesQRCode = clsGenereQRCode.GenereQRCode(Texte, Correction, ref bOK, ref nbBitsCorrection);
+                if (bOK != true) return null;
 
-            // la résolution maximum est 10
-            if (clsGenereQRCode.iPas >7) clsGenereQRCode.iPas = 7;
+                // Récupération de la largeur de l'écran pour adapter la résolution du QR Code
+                tailleEcranModuleQRCode();
+                int TailleQrCode = (clsGenereQRCode.ModulesQRCode.GetLength(0) + 2 * TailleBordure);
+                ImageSize = TailleQrCode * clsGenereQRCode.iPas;
+                pourcentCorrection = (int)(100.0 * nbBitsCorrection / ((float)TailleQrCode * (float)TailleQrCode));
+                return new ImageDrawable(null, pourcentCorrection, clsGenereQRCode.iPas);
 
-            // La résolution minimum est 2
-            if (clsGenereQRCode.iPas < 2) clsGenereQRCode.iPas = 2; // afficher un message pour suggérer de dimunuer la correction si elle n'est pas au minimum
-            ImageSize = TailleQrCode * clsGenereQRCode.iPas;
-            pourcentCorrection = (int)(100.0 * nbBitsCorrection / ((float)TailleQrCode * (float)TailleQrCode));
-            return new ImageDrawable(null, pourcentCorrection, clsGenereQRCode.ModulesQRCode, TailleBordure);
+            }
+            catch (Exception ex)
+            {
+                messageErreur = "Votre application QR Dess Free a rencontré un problème, veuillez contacter le développeur en lui communiquant le message ci-dessous :\n\n"
+                   + $"{ex}";
+                return null;
+            }
 
         }
 

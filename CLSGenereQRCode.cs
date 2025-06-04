@@ -652,6 +652,7 @@ namespace QRDessFree
         /// <summary>Initialisation des différentes tables</summary>
         public static void InitTables()
         {
+
             InitPowerOf2();
             InitVersions();
             InitLogTables();
@@ -832,6 +833,7 @@ namespace QRDessFree
         /// <returns>Table complète des bits du QRCode (complété avec les bits à zéro restant=Remainder Bits)</returns>
         public static byte[] GenereLitAllCodewords(ref byte[] Datawords, int Version, ref GroupBlockStruct[] QRCodeDataAndCorrections, ref int nbBitsCorrection, bool Lecture = false)
         {
+
             int[] iSizeGroup ={ tbVersion[Version].NBBlocksGroup1, tbVersion[Version].NBBlocksGroup2 };
             int[] iSizeBlocksGroup = { tbVersion[Version].DataCodewordsInEachBlocksGroup1, tbVersion[Version].DataCodewordsInEachBlocksGroup2 };
             int ECCodeWords = tbVersion[Version].ECCodeWords;
